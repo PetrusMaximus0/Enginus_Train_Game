@@ -1,11 +1,10 @@
 #include "GameObject.h"
 #include "TextureManager.h"
 
-GameObject::GameObject(const char* TextureSheet, Vector2DInt InCoordinates, bool IsStatic)
-{
-	Texture = TextureManager::LoadTexture(TextureSheet);
-	Coordinates = InCoordinates;
-}
+GameObject::GameObject(SDL_Renderer* InRenderer, const char* TextureSheet, Vector2D<int> InCoordinates, bool IsStatic): 
+	Coordinates(InCoordinates), 
+	Renderer(InRenderer), 
+	Texture(TextureManager::LoadTexture(Renderer, TextureSheet)){}
 
 GameObject::~GameObject()
 {
@@ -20,8 +19,8 @@ void GameObject::Update()
 	//coordinates on the sprite sheet to take texture from
 	SourceRectangle.x = 0;
 	SourceRectangle.y = 0;
-	SourceRectangle.w = 64;
-	SourceRectangle.h = 64;
+	SourceRectangle.w = GAME_OBJECT_WIDTH;
+	SourceRectangle.h = GAME_OBJECT_HEIGHT;
 	//Where to draw the texture?
 	DestinationRectangle.x = Coordinates.x;
 	DestinationRectangle.y = Coordinates.y;
@@ -33,7 +32,6 @@ void GameObject::Update()
 
 void GameObject::Render()
 {	/*Renders the game object on screen*/
-	
-	SDL_RenderCopyEx(Game::Renderer, Texture, &SourceRectangle, &DestinationRectangle, Heading, NULL, SDL_FLIP_NONE);
+	SDL_RenderCopyEx(Renderer, Texture, &SourceRectangle, &DestinationRectangle, Heading, NULL, SDL_FLIP_NONE);
 	
 }

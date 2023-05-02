@@ -1,5 +1,5 @@
-
 #include "Game.h"
+#include "Library.h"
 
 struct GAColor {
 	int red{};
@@ -109,14 +109,13 @@ Game* OGame{};
 int main(int argc, char* args[]) {
 
 	/*FRAME RATE LIMITING*/
-	const int FramesPerSecond{ 60 };
+	const int FramesPerSecond{ 20 };
 	const int FrameDelay{ 1000 / FramesPerSecond };
 	Uint32 FrameStart{ 0 };
 	int FrameTime{ 0 };
-
 	/*INITIALIZE A GAME INSTANCE*/
 	OGame = new Game();
-	OGame->Init("Enginus", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1366, 768, false);
+	OGame->Init("Enginus", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, GAME_WINDOW_WIDTH, GAME_WINDOW_HEIGHT, false);
 	
 	/*MAIN GAME LOOP*/
 	while (OGame->GetIsRunning()) {
@@ -140,5 +139,7 @@ int main(int argc, char* args[]) {
 	}
 
 	OGame->Clean();
+	delete OGame;
+
 	return 0;
 }  

@@ -1,12 +1,18 @@
 #pragma once
 #include "Game.h"
-#include "TextureManager.h"
+//#include "TextureManager.h"
 #include "GameObject.h"
-
-
+#include "Map.h"
+//#include "EntityComponentSystem.h"
+#include "Components.h"
+//#include "Library.h"
+// 
+//TEMPORARY GLOBALS
 GameObject* Train{};
 GameObject* Train2{};
-SDL_Renderer* Game::Renderer{};
+Map* GameWorld{};
+Manager GameManager;
+auto& Train3(GameManager.AddEntity());
 
 Game::Game() {
 	/*Default constructor for class Game*/
@@ -16,7 +22,6 @@ Game::Game() {
 
 Game::~Game() {
 	/*Default destructor for class Game*/
-
 }
 
 void Game::Init(const char* title, int PositionX, int PositionY, int Width, int Height, bool IsFullscreen)
@@ -44,12 +49,14 @@ void Game::Init(const char* title, int PositionX, int PositionY, int Width, int 
 		}
 	}
 	//Creation of Textures.
-	Vector2DInt Vector{ 500,500 };
-	Vector2DInt Vector2{ 100, 100 };
+	Vector2D <int>Vector{ 500,500 };
+	Vector2D <int>Vector2{ 100, 100 };
 	//Spawn a new Train
-	Train = new GameObject("resources//art//car_blue_01.png", Vector);
-	Train2 = new GameObject("resources//art//tile_track_basic_01.png", Vector2);
-	
+	Train = new GameObject(Renderer,"assets//art//car_blue_01.png", Vector);
+	Train2 = new GameObject(Renderer,"assets//art//tile_track_basic_01.png", Vector2);
+	GameWorld = new Map(Renderer);
+	Train3.AddComponent<PositionComponent>();
+	Train3.GetComponent<PositionComponent>().SetPos(100,100);
 }
 
 void Game::HandleEvents(){
@@ -76,6 +83,9 @@ void Game::Update()
 	UpdateCounter++;
 	Train->Update();
 	Train2->Update();
+	GameManager.Update();
+	std::cout << Train3.GetComponent<PositionComponent>().GetPosition().x << "," 
+		      << Train3.GetComponent<PositionComponent>().GetPosition().y << std::endl;
 	//update the rectangle position and drawing size
 	//std::cout << UpdateCounter << std::endl;
 
@@ -89,14 +99,11 @@ void Game::Render()
 	SDL_RenderClear(Renderer);
 	//add new stuff to render
 	//Background Objects
-	// 
+	//GameWorld->LoadMap();//Used to Change Maps
+	GameWorld->DrawMap();
 	//Foreground Objects
 	Train->Render();
 	Train2->Render();
-	/*First rectangle NULL is all the image, Second rectangle NULL is all the screen*/
-	
-	
-	
 	//present the new stuff on screen
 	SDL_RenderPresent(Renderer);
 }
@@ -107,7 +114,15 @@ void Game::Clean()
 	SDL_DestroyWindow(Window);
 	SDL_DestroyRenderer(Renderer);
 	SDL_Quit();
+	delete Train;
+	delete Train2;
+	delete GameWorld;
 	std::cout << "Game cleaning complete" << std::endl;
 }
 
 bool Game::GetIsRunning(){return IsRunning;}
+
+void Game::AddTile(int TileId, Vector2D<int> Coordinates) {
+
+
+}

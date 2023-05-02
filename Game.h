@@ -2,8 +2,8 @@
 #include <SDL.h>
 #include <SDL_image.h>
 #include <iostream>
+#include <cstdlib>
 #include "Library.h"
-
 
 class Game{
 public:
@@ -15,9 +15,11 @@ public:
 	void Render();
 	void Clean();
 	bool GetIsRunning();
-	static SDL_Renderer* Renderer;
+	void AddTile(int TileId, Vector2D<int> Coordinates);
+	
 
 private:
+	SDL_Renderer* Renderer{};
 	bool IsRunning{};
 	SDL_Window* Window{};
 	int UpdateCounter{};
