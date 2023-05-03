@@ -1,17 +1,15 @@
 #pragma once
 #include "Game.h"
-//#include "TextureManager.h"
 #include "GameObject.h"
 #include "Map.h"
-//#include "EntityComponentSystem.h"
-#include "Components.h"
-//#include "Library.h"
+#include "ECS/Components.h"
+
 // 
 //TEMPORARY GLOBALS
-GameObject* Train{};
-GameObject* Train2{};
+
 Map* GameWorld{};
 Manager GameManager;
+
 auto& Train3(GameManager.AddEntity());
 
 Game::Game() {
@@ -48,15 +46,13 @@ void Game::Init(const char* title, int PositionX, int PositionY, int Width, int 
 			}
 		}
 	}
-	//Creation of Textures.
-	Vector2D <int>Vector{ 500,500 };
-	Vector2D <int>Vector2{ 100, 100 };
 	//Spawn a new Train
-	Train = new GameObject(Renderer,"assets//art//car_blue_01.png", Vector);
-	Train2 = new GameObject(Renderer,"assets//art//tile_track_basic_01.png", Vector2);
 	GameWorld = new Map(Renderer);
-	Train3.AddComponent<PositionComponent>();
-	Train3.GetComponent<PositionComponent>().SetPos(100,100);
+
+	Train3.AddComponent<PositionComponent>(100,100);
+	Train3.AddComponent<SpriteComponent>(Renderer, "assets/art/car_purple_01.png");
+
+
 }
 
 void Game::HandleEvents(){
@@ -81,13 +77,7 @@ void Game::Update()
 {
 	/*Updates the game state with new information */
 	UpdateCounter++;
-	Train->Update();
-	Train2->Update();
 	GameManager.Update();
-	std::cout << Train3.GetComponent<PositionComponent>().GetPosition().x << "," 
-		      << Train3.GetComponent<PositionComponent>().GetPosition().y << std::endl;
-	//update the rectangle position and drawing size
-	//std::cout << UpdateCounter << std::endl;
 
 }
 
@@ -101,9 +91,9 @@ void Game::Render()
 	//Background Objects
 	//GameWorld->LoadMap();//Used to Change Maps
 	GameWorld->DrawMap();
+
+	GameManager.Draw();
 	//Foreground Objects
-	Train->Render();
-	Train2->Render();
 	//present the new stuff on screen
 	SDL_RenderPresent(Renderer);
 }
@@ -114,8 +104,6 @@ void Game::Clean()
 	SDL_DestroyWindow(Window);
 	SDL_DestroyRenderer(Renderer);
 	SDL_Quit();
-	delete Train;
-	delete Train2;
 	delete GameWorld;
 	std::cout << "Game cleaning complete" << std::endl;
 }

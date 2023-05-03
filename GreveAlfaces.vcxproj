@@ -72,8 +72,8 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>C:\Projects\Development\SDL2_image-2.6.3\include;C:\Projects\Development\SDL2\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Projects\Development\SDL2_image-2.6.3\lib\x64;C:\Projects\Development\SDL2\lib\x64;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Projects\Development\SDL2_image\include;C:\Projects\Development\SDL2\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Projects\Development\SDL2_image\lib\x64;C:\Projects\Development\SDL2\lib\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -142,12 +142,14 @@
     <ClCompile Include="TextureManager.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Components.h" />
-    <ClInclude Include="EntityComponentSystem.h" />
+    <ClInclude Include="ECS\Components.h" />
+    <ClInclude Include="ECS\EntityComponentSystem.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="Library.h" />
     <ClInclude Include="Map.h" />
+    <ClInclude Include="ECS\PositionComponent.h" />
+    <ClInclude Include="ECS\SpriteComponent.h" />
     <ClInclude Include="TextureManager.h" />
   </ItemGroup>
   <ItemGroup>
