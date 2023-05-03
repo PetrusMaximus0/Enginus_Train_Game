@@ -9,8 +9,8 @@
 
 Map* GameWorld{};
 Manager GameManager;
-
-auto& Train3(GameManager.AddEntity());
+//auto& Train(GameManager.AddEntity());
+RailwayPoint* Stations[5]{};
 
 Game::Game() {
 	/*Default constructor for class Game*/
@@ -49,10 +49,7 @@ void Game::Init(const char* title, int PositionX, int PositionY, int Width, int 
 	//Spawn a new Train
 	GameWorld = new Map(Renderer);
 
-	Train3.AddComponent<PositionComponent>(100,100);
-	Train3.AddComponent<SpriteComponent>(Renderer, "assets/art/car_purple_01.png");
-
-
+	InitializeTrains();
 }
 
 void Game::HandleEvents(){
@@ -79,6 +76,9 @@ void Game::Update()
 	UpdateCounter++;
 	GameManager.Update();
 
+	for (auto& Stat : Stations) {Stat->Update();}
+
+
 }
 
 void Game::Render()
@@ -91,7 +91,7 @@ void Game::Render()
 	//Background Objects
 	//GameWorld->LoadMap();//Used to Change Maps
 	GameWorld->DrawMap();
-
+	for (auto& Stat : Stations) { Stat->Render(); }
 	GameManager.Draw();
 	//Foreground Objects
 	//present the new stuff on screen
@@ -114,3 +114,10 @@ void Game::AddTile(int TileId, Vector2D<int> Coordinates) {
 
 
 }
+
+void Game::InitializeTrains() {
+	//Train.AddComponent<PositionComponent>(100, 100);
+	//Train.AddComponent<SpriteComponent>(Renderer, "assets/art/car_purple_01.png");
+	Stations[0] = new RailwayPoint(Renderer, "assets/art/car_purple_01.png", Vector2D<int>{50, 25});
+	
+};

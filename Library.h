@@ -19,3 +19,13 @@ enum class TileTypes : unsigned char
 
 };
 
+enum class GACarColor : unsigned char {
+	Empty,
+	Blue,
+	Green,
+	Orange,
+	Purple
+
+};
+
+

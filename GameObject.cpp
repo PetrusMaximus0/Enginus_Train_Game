@@ -1,7 +1,7 @@
 #include "GameObject.h"
 #include "TextureManager.h"
 
-GameObject::GameObject(SDL_Renderer* InRenderer, const char* TextureSheet, Vector2D<int> InCoordinates, bool IsStatic): 
+GameObject::GameObject(SDL_Renderer* InRenderer, const char* TextureSheet, Vector2D<int> InCoordinates):
 	Coordinates(InCoordinates), 
 	Renderer(InRenderer), 
 	Texture(TextureManager::LoadTexture(Renderer, TextureSheet)){}

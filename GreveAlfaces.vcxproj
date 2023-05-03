@@ -139,7 +139,9 @@
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Map.cpp" />
+    <ClCompile Include="RailwayPoint.cpp" />
     <ClCompile Include="TextureManager.cpp" />
+    <ClCompile Include="Train.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ECS\Components.h" />
@@ -150,7 +152,9 @@
     <ClInclude Include="Map.h" />
     <ClInclude Include="ECS\PositionComponent.h" />
     <ClInclude Include="ECS\SpriteComponent.h" />
+    <ClInclude Include="RailwayPoint.h" />
     <ClInclude Include="TextureManager.h" />
+    <ClInclude Include="Train.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\..\..\..\..\Projects\GreveAlfaces\resources\art\car_empty_01.png" />

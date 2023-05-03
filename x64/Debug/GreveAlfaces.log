@@ -1,1 +1,32 @@
-﻿  GreveAlfaces.vcxproj -> H:\Enginus\x64\Debug\Enginus.exe
+﻿  Game.cpp
+C:\Projects\Enginus\Game.cpp(15,14): error C2512: 'RailwayPoint': no appropriate default constructor available
+C:\Projects\Enginus\RailwayPoint.h(4,7): message : see declaration of 'RailwayPoint'
+  GameObject.cpp
+  main.cpp
+  RailwayPoint.cpp
+  Train.cpp
+C:\Projects\Enginus\Train.cpp(33,3): error C2065: 'Coordinate': undeclared identifier
+C:\Projects\Enginus\Train.cpp(34,3): error C2065: 'Coordinate': undeclared identifier
+C:\Projects\Enginus\Train.cpp(43,32): error C2248: 'GameObject::Renderer': cannot access private member declared in class 'GameObject'
+C:\Projects\Enginus\GameObject.h(20,16): message : see declaration of 'GameObject::Renderer'
+C:\Projects\Enginus\GameObject.h(9,7): message : see declaration of 'GameObject'
+C:\Projects\Enginus\Train.cpp(47,32): error C2248: 'GameObject::Renderer': cannot access private member declared in class 'GameObject'
+C:\Projects\Enginus\GameObject.h(20,16): message : see declaration of 'GameObject::Renderer'
+C:\Projects\Enginus\GameObject.h(9,7): message : see declaration of 'GameObject'
+C:\Projects\Enginus\Train.cpp(51,32): error C2248: 'GameObject::Renderer': cannot access private member declared in class 'GameObject'
+C:\Projects\Enginus\GameObject.h(20,16): message : see declaration of 'GameObject::Renderer'
+C:\Projects\Enginus\GameObject.h(9,7): message : see declaration of 'GameObject'
+C:\Projects\Enginus\Train.cpp(55,32): error C2248: 'GameObject::Renderer': cannot access private member declared in class 'GameObject'
+C:\Projects\Enginus\GameObject.h(20,16): message : see declaration of 'GameObject::Renderer'
+C:\Projects\Enginus\GameObject.h(9,7): message : see declaration of 'GameObject'
+C:\Projects\Enginus\Train.cpp(59,32): error C2248: 'GameObject::Renderer': cannot access private member declared in class 'GameObject'
+C:\Projects\Enginus\GameObject.h(20,16): message : see declaration of 'GameObject::Renderer'
+C:\Projects\Enginus\GameObject.h(9,7): message : see declaration of 'GameObject'
+C:\Projects\Enginus\Train.cpp(70,3): error C2065: 'Coordinate': undeclared identifier
+C:\Projects\Enginus\Train.cpp(70,21): error C2065: 'Coordinate': undeclared identifier
+C:\Projects\Enginus\Train.cpp(71,3): error C2065: 'Coordinate': undeclared identifier
+C:\Projects\Enginus\Train.cpp(71,21): error C2065: 'Coordinate': undeclared identifier
+C:\Projects\Enginus\Train.cpp(73,2): error C2065: 'Coordinate': undeclared identifier
+C:\Projects\Enginus\Train.cpp(74,2): error C2065: 'Coordinate': undeclared identifier
+C:\Projects\Enginus\Train.cpp(84,9): error C2065: 'Coordinate': undeclared identifier
+  Generating Code...

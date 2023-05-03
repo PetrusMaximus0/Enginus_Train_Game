@@ -9,11 +9,11 @@
 class GameObject
 {
 public:
-	GameObject(SDL_Renderer* InRenderer, const char* TextureSheet, Vector2D<int> InCoordinates, bool IsStatic = true);
+	GameObject(SDL_Renderer* InRenderer, const char* TextureSheet, Vector2D<int> InCoordinates);
 	~GameObject();
 
-	void Update();
-	void Render();
+	virtual void Update();
+	virtual void Render();
 
 private:
 	SDL_Renderer* Renderer{};
