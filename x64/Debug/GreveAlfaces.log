@@ -1,4 +1,11 @@
-﻿  Train.cpp
+﻿  Game.cpp
+  GameObject.cpp
+  main.cpp
+  Map.cpp
+  RailwayPoint.cpp
+  TextureManager.cpp
+  Train.cpp
+  Generating Code...
 H:\Enginus\Train.cpp(63): warning C4715: 'Train::SetWagonTexture': not all control paths return a value
 LINK : warning LNK4075: ignoring '/INCREMENTAL' due to '/PROFILE' specification
 Game.obj : warning LNK4075: ignoring '/EDITANDCONTINUE' due to '/OPT:REF' specification

@@ -1,3 +1,1 @@
-C:\Users\pedro\source\repos\GreveAlfaces\x64\Debug\GreveAlfaces.exe
-C:\Projects\Enginus\x64\Debug\Enginus.exe
 H:\Enginus\x64\Debug\Enginus.exe
