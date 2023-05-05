@@ -1,36 +1,58 @@
 #pragma once
+
 #include "GameObject.h"
+#include "Library.h"
+#include "RailwayPoint.h"
 
-class Train : public GameObject
+#define NUMBER_OF_CARS 4
+class Train
 {
-
 private:
 	bool IsMoving{};
-	char Identifier[2]{};
-	int CarSize{};
-	SDL_Texture* CarTextures[4]{};
-	Vector2D<int> CarCoordinates[4]{};
-
-public:
-	Train(SDL_Renderer* InRenderer, Vector2D<int> InCoordinate, bool InIsMoving, int InCarSize, const char* InIdentifier);
-
-	void Update() override;
-
-	void Render() override;
+	char Identifier[3]{};
+	GameObject* Cars[NUMBER_OF_CARS];
+	SDL_Renderer* Renderer{};
+	Vector2D<int> Velocity[NUMBER_OF_CARS]{};
+	RailwayPoint* Destinations[NUMBER_OF_CARS]{};
+	RailwayPoint* StartingStation{};
+	bool IsActive{true};
+	int MaxTrips{};
+	int TripsCompleted{};
+	bool WinConditon{};
 	
-	void InitializeTrainCoordinates(Vector2D<int> InCoordinate);
+public:
+	Train(SDL_Renderer* InRenderer, bool InIsMoving, const char* InIdentifier, RailwayPoint* InitialStation, int InMaxTrips = 10);
+	SDL_Texture* SetWagonTexture(GACarColor NewColor, int WagonID);
 
-	void SetWagonTexture(GACarColor NewColor, int WagonID);
+	void SetColorType(GACarColor NewColor, int CarID);
 
-	void MoveTrain(Vector2D<int> NewCoordinates);
+	~Train();
 
-	void SetIsMoving(bool Moving);
+	void Update();
+
+	void Render();
+
+	void UpdateCars();
+
+	void SetDestination(RailwayPoint* NewDestination, int CarID);
+
+	void HandleCarStationInteraction();
+
+	GameObject* GetCar(int Index);
+
+	void SetIsMoving(bool Value);
 
 	bool GetIsMoving();
 
-	Vector2D<int> GetCoordinates();
+	void StopTrain();
 
-	void PrintTrainDetails(bool OnlyCoordinates);
+	void Respawn();
+
+	void MarkForDeletion();
+
+	bool GetIsActive();
+
+	void CheckWinCondition();
 
 };
 

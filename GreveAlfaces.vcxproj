@@ -158,6 +158,24 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\..\..\..\..\Projects\GreveAlfaces\resources\art\car_empty_01.png" />
+    <Image Include="assets\art\car_blue_01.png" />
+    <Image Include="assets\art\car_empty_01.png" />
+    <Image Include="assets\art\car_green_01.png" />
+    <Image Include="assets\art\car_orange_01.png" />
+    <Image Include="assets\art\car_purple_01.png" />
+    <Image Include="assets\art\station_blue_01.png" />
+    <Image Include="assets\art\station_green_01.png" />
+    <Image Include="assets\art\station_orange_01.png" />
+    <Image Include="assets\art\station_purple_01.png" />
+    <Image Include="assets\art\tilesReference.jpg" />
+    <Image Include="assets\art\tile_dirt_01.png" />
+    <Image Include="assets\art\tile_grass_01.png" />
+    <Image Include="assets\art\tile_track_basic_01.png" />
+    <Image Include="assets\art\tile_water_01.png" />
+    <Image Include="assets\art\waypoint_01.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Saved\level_01.json" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

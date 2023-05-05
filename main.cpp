@@ -1,13 +1,15 @@
 #include "Game.h"
 #include "Library.h"
 #include "TextureManager.h"
+#include <iostream>
 
 Game* OGame{};
 
 int main(int argc, char* args[]) {
 
+	std::srand((unsigned)time(nullptr));
 	/*FRAME RATE LIMITING*/
-	const int FramesPerSecond{ 20 };
+	const int FramesPerSecond{ 200 };
 	const int FrameDelay{ 1000 / FramesPerSecond };
 	Uint32 FrameStart{ 0 };
 	int FrameTime{ 0 };
@@ -30,12 +32,8 @@ int main(int argc, char* args[]) {
 			SDL_Delay(FrameDelay - FrameTime);
 		else
 			std::cout << "Game is slower than frame rate delay\n";
-
-	
-
-
 	}
-
+	/*CLEAN UP*/
 	OGame->Clean();
 	delete OGame;
 

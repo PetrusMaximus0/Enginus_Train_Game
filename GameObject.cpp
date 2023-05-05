@@ -1,10 +1,18 @@
 #include "GameObject.h"
 #include "TextureManager.h"
 
-GameObject::GameObject(SDL_Renderer* InRenderer, const char* TextureSheet, Vector2D<int> InCoordinates):
-	Coordinates(InCoordinates), 
-	Renderer(InRenderer), 
-	Texture(TextureManager::LoadTexture(Renderer, TextureSheet)){}
+GameObject::GameObject(SDL_Renderer* InRenderer, Vector2D<int> InCoordinates, GACarColor InColorType) :
+	Coordinates(InCoordinates),
+	Renderer(InRenderer),
+	ColorType(InColorType)
+{
+}
+
+GameObject::GameObject(SDL_Renderer* InRenderer, const char* TextureSheet, Vector2D<int> InCoordinates, GACarColor InColorType):
+	Coordinates(InCoordinates),
+	Renderer(InRenderer),
+	Texture(TextureManager::LoadTexture(Renderer, TextureSheet)),
+	ColorType(InColorType){}
 
 GameObject::~GameObject()
 {
@@ -13,9 +21,6 @@ GameObject::~GameObject()
 void GameObject::Update()
 {
 	/*Updates the state of the object, movement, etc*/
-	//Manage Coordinates of Object
-	Coordinates.x += 0;
-	Coordinates.y += 0;
 	//coordinates on the sprite sheet to take texture from
 	SourceRectangle.x = 0;
 	SourceRectangle.y = 0;
@@ -34,4 +39,32 @@ void GameObject::Render()
 {	/*Renders the game object on screen*/
 	SDL_RenderCopyEx(Renderer, Texture, &SourceRectangle, &DestinationRectangle, Heading, NULL, SDL_FLIP_NONE);
 	
+}
+
+void GameObject::SetTexture(SDL_Texture* NewTexture)
+{
+	Texture = NewTexture;
+}
+
+void GameObject::SetTransform(Vector2D<int> NewCoordinates, int NewHeading)
+{
+	Coordinates = NewCoordinates;
+	Heading = NewHeading;
+}
+
+void GameObject::SetTransform(Vector2D<int> NewCoordinates)
+{
+	Coordinates = NewCoordinates;
+	
+}
+
+Vector2D<int> GameObject::GetPosition(){return Coordinates;}
+
+void GameObject::SetColorType(GACarColor NewColorType)
+{
+	ColorType = NewColorType;
+}
+
+GACarColor GameObject::GetColorType() {
+	return ColorType;
 }

@@ -1,12 +1,12 @@
 #include "Map.h"
 #include "TextureManager.h"
 
-
 Map::Map(SDL_Renderer* InRenderer): 
 	Renderer(InRenderer),
 	Dirt(TextureManager::LoadTexture(Renderer, "assets//art//tile_dirt_01.png")),
 	Water(TextureManager::LoadTexture(Renderer, "assets//art//tile_water_01.png")),
-	Grass(TextureManager::LoadTexture(Renderer, "assets//art//tile_grass_01.png"))
+	Grass(TextureManager::LoadTexture(Renderer, "assets//art//tile_grass_01.png")),
+	Track(TextureManager::LoadTexture(Renderer, "assets//art//tile_track_basic_01.png"))
 
 {
 	std::srand((unsigned)time(nullptr));
@@ -14,7 +14,7 @@ Map::Map(SDL_Renderer* InRenderer):
 
 	/*TEMPORARY - MAP*/
 	//Populated with zeroes.
-	TileTypes level1[MapWidth][MapHeight];
+	TileTypes level1[MapHeight][MapWidth];
 	LoadMap(level1);
 
 	SourceRectangle.x = 0;
@@ -33,19 +33,17 @@ Map::~Map()
 {
 }
 
-void Map::LoadMap(TileTypes MapArray[MapWidth][MapHeight])
+void Map::LoadMap(TileTypes MapArray[MapHeight][MapWidth])
 {
 	for (int row = 0; row < MapHeight; row++) {
 		for (int column = 0; column < MapWidth; column++) {
 			//Use this one
-			//MapData[row][column] = MapArray[row][column];
+			MapData[row][column] = MapArray[row][column];
 			
 			//Random tiles
-			MapData[row][column] = (TileTypes)(rand() % 3);
+			//MapData[row][column] = (TileTypes)(rand() % 3);
 		}
 	}
-
-
 }
 
 void Map::DrawMap()
@@ -76,9 +74,18 @@ void Map::DrawMap()
 				TextureManager::Draw(Renderer, Grass, SourceRectangle, DestinationRectangle);
 				//std::cout << "Loaded Grass texture \n";
 				break;
-				
+
+			case TileTypes::TrackVertical:
+				TextureManager::Draw(Renderer, Track, SourceRectangle, DestinationRectangle, 90);
+				break;
+			
+			case TileTypes::TrackHorizontal:
+				TextureManager::Draw(Renderer, Track, SourceRectangle, DestinationRectangle);
+				break;
+
 			default:
-				std::cout << "ERROR, unknown texture selected" << std::endl;
+				TextureManager::Draw(Renderer, Water, SourceRectangle, DestinationRectangle);
+				//std::cout << "ERROR, unknown texture selected" << std::endl;
 				break;
 			}
 			

@@ -1,0 +1,14 @@
+
+*.obj
+*.vsidx
+*.vsidx
+*.vsidx
+*.vsidx
+.vs/Enginus/v17/.suo
+*.ipch
+*.ipch
+*.ipch
+*.ipch
+.vs/Enginus/v17/ipch/AutoPCH/c633a9e062879af7/GAME.ipch
+*.exe
+*.pdb

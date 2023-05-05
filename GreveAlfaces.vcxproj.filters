@@ -30,10 +30,10 @@
     <ClCompile Include="Map.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Train.cpp">
+    <ClCompile Include="RailwayPoint.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="RailwayPoint.cpp">
+    <ClCompile Include="Train.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -65,10 +65,10 @@
     <ClInclude Include="ECS\PositionComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Train.h">
+    <ClInclude Include="RailwayPoint.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="RailwayPoint.h">
+    <ClInclude Include="Train.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -76,5 +76,53 @@
     <Image Include="..\..\..\..\..\Projects\GreveAlfaces\resources\art\car_empty_01.png">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="assets\art\car_blue_01.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\art\car_empty_01.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\art\car_green_01.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\art\car_orange_01.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\art\car_purple_01.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\art\station_blue_01.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\art\tile_dirt_01.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\art\tile_grass_01.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\art\tile_track_basic_01.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\art\tile_water_01.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\art\tilesReference.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\art\waypoint_01.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\art\station_green_01.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\art\station_orange_01.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\art\station_purple_01.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Saved\level_01.json" />
   </ItemGroup>
 </Project>
