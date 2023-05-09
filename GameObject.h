@@ -30,5 +30,6 @@ protected:
 	SDL_Rect SourceRectangle{}, DestinationRectangle{};
 	int Heading{};//0 to 359 degrees clockwise rotation
 	GACarColor ColorType{};
+
 };
 

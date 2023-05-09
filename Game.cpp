@@ -3,14 +3,18 @@
 #include "GameObject.h"
 #include "Map.h"
 #include "ECS/Components.h"
+#include "assets/json_parser/json.hpp"
+#include <fstream>
 
+#define NUMBER_OF_STATIONS 100
+#define NUMBER_OF_TRAINS 100
 
 // 
 //TEMPORARY GLOBALS
 
 Map* GameWorld{};
-RailwayPoint* Stations[20]{};
-Train* Trains[5]{};
+RailwayPoint* Stations[NUMBER_OF_STATIONS]{};
+Train* Trains[NUMBER_OF_TRAINS]{};
 
 Game::Game() {
 	/*Default constructor for class Game*/
@@ -30,7 +34,7 @@ Game::~Game() {
 
 void Game::Init(const char* title, int PositionX, int PositionY, int Width, int Height, bool IsFullscreen)
 {
-	/*Initialize SDL, window and renderer. Initialize the Textures*/
+	/*Initialize SDL, window and renderer. Initializes the trains and stations*/
 	//full or windowed screen mode 
 	int Flag{ 0 };
 	IsFullscreen ? Flag = SDL_WINDOW_FULLSCREEN : false;
@@ -63,16 +67,30 @@ void Game::HandleEvents(){
 	/*Handles SDL events such as SDL_QUIT and others ( TBA )*/
 	
 	SDL_Event Event{};
-	SDL_PollEvent(&Event);
 	
-	switch (Event.type) {
-	case SDL_QUIT:// in case of this event, the game is set to not running and thus the program will proceed to Game::Clean()
-		IsRunning = false;
-		break;
-	default:
-		break;
+	while (SDL_PollEvent(&Event)) {
+		switch (Event.type) {
+		case SDL_QUIT:// in case of this event, the game is set to not running and thus the program will proceed to Game::Clean()
+			IsRunning = false;
+			break;
+		case SDL_KEYDOWN:
+			if (Event.key.keysym.sym == SDLK_ESCAPE) {
+				IsRunning = false;
+			}
+			break;
+		case SDL_MOUSEBUTTONDOWN:
+			if (Event.button.button == SDL_BUTTON_LEFT) {
+				HandleHitsUnderCursor();
+			}
+			break;
 
+		default:
+			break;
+
+		}
 	}
+	
+
 
 
 }
@@ -81,23 +99,25 @@ void Game::Update()
 {
 	/*Updates the game state with new information */
 	UpdateCounter++;
-	//GameManager.Update();
 
-	if (UpdateCounter % 500 == 0)
-		Stations[2]->SwapNextPoint(Stations[6], Stations[3]);
-
-	//if (UpdateCounter % 2000 == 0)
-		//Stations[2]->SwapNextPoint(Stations[3], Stations[6]);
-
-
-
+/*Update Stations*/
 	for (int i = 0; i < StationsCounter; i++) {
+		Stations[i]->SetTrainInStation(IsTrainInStation(Stations[i]));
 		Stations[i]->Update();
 	}
-	/*Checks for collisions between trains*/
-	CheckTrainCollision();
-	/*Update Trains*/
+/*Update Trains*/
+	//check for collisions
 	for (int i = 0; i < TrainsCounter; i++){
+		for (int j = 0; j < TrainsCounter; j++) {
+			if (i != j) {
+				for (int k = 0; k < NUMBER_OF_CARS; k++)
+					if ((Trains[i]->GetCar(0)->GetPosition() - Trains[j]->GetCar(k)->GetPosition()).Abs() <= GAME_OBJECT_WIDTH) {
+						Trains[i]->SetIsMoving(false);
+						break;
+					}
+			}	
+		}
+		//clean up trains marked for deletion
 		if (Trains[i]->GetIsActive())
 			Trains[i]->Update();
 		else
@@ -137,11 +157,13 @@ void Game::Clean()
 	SDL_DestroyWindow(Window);
 	SDL_DestroyRenderer(Renderer);
 	SDL_Quit();
-	for (auto& Stat : Stations) {
-		delete(Stat);
-	}
+	for (auto& Stat : Stations) delete(Stat);
+	std::cout << "Cleared Stations\n";
+	for (auto& Train : Trains) delete(Train);
+	std::cout << "Cleared Trains\n";
 	delete GameWorld;
-	std::cout << "Game cleaning complete" << std::endl;
+	std::cout << "Cleared Map\n";
+	std::cout << "Game cleaning complete!" << std::endl;
 }
 
 bool Game::GetIsRunning(){return IsRunning;}
@@ -152,35 +174,73 @@ void Game::AddTile(int TileId, Vector2D<int> Coordinates) {
 }
 
 void Game::InitializeTrains() {
-	/*Stations*/
-	Stations[0] = Game::AddPoint("assets/art/waypoint_01.png", Vector2D<int>{4, 20}, "ST01", "WPT");
-	Stations[1] = Game::AddPoint("assets/art/station_blue_01.png", Vector2D<int>{4, 12}, "ST02", "STA");
-	Stations[2] = Game::AddPoint("assets/art/waypoint_01.png", Vector2D<int>{21, 12}, "ST03", "WPT");
-	Stations[3] = Game::AddPoint("assets/art/station_blue_01.png", Vector2D<int>{39, 12}, "ST04", "STA");
-	Stations[4] = Game::AddPoint("assets/art/waypoint_01.png", Vector2D<int>{39, 20}, "ST05", "WPT");
-	Stations[5] = Game::AddPoint("assets/art/station_blue_01.png", Vector2D<int>{21, 20}, "ST06", "STA");
-	Stations[6] = Game::AddPoint("assets/art/waypoint_01.png", Vector2D<int>{21, 4}, "ST07", "WPT");
-	Stations[7] = Game::AddPoint("assets/art/station_blue_01.png", Vector2D<int>{10, 4}, "ST08", "STA");
+	/*Load game data from a json file*/
+	/*Load the json file*/
+	using json = nlohmann::json;
+	std::ifstream file("assets/levels/level_01.json");
+	if (!file.is_open()) {
+		std::cerr << "Failed to open file!\n";
+		IsRunning = false;
+	}
+	json Data;
+	file >> Data;
+
+	std::cout << Data.dump(4) << std::endl;
+	int NumPoints = 0;
+	int NumTrains = 0;
+
+	/*Load Stations*/
+	for (const auto& pointData : Data["points"]) {
+		if (NumPoints > NUMBER_OF_STATIONS) {
+			std::cerr << "Maximum points reached" << std::endl;
+			IsRunning = false;
+			break;
+		}
+		Vector2D<int> Coordinates;
+		Coordinates.x = pointData["x"].get<int>();
+		Coordinates.y = pointData["y"].get<int>();
+		std::string Identifier{ pointData["identifier"].get<std::string>() };
+		std::string  PointType{ pointData["pointType"].get<std::string>() };
+		Stations[NumPoints] = Game::AddPoint(Coordinates, Identifier.c_str(), PointType.c_str());
+		NumPoints++;
+	}
+
 	/*Lay Tracks*/
-	ConnectPoints(Stations[0], Stations[1]);
-	ConnectPoints(Stations[1], Stations[2]);
-	ConnectPoints(Stations[2], Stations[3]);
-	ConnectPoints(Stations[2], Stations[6]);
-	ConnectPoints(Stations[3], Stations[4]);
-	ConnectPoints(Stations[4], Stations[5]);
-	ConnectPoints(Stations[5], Stations[0]);
-	ConnectPoints(Stations[6], Stations[7]);
-	/*Trains*/
-	Trains[0] = Game::AddTrain(Stations[0], true, "CA", 5);
-	Trains[1] = Game::AddTrain(Stations[1], true, "CP", 5);
+	NumPoints = 0;
+	for (const auto& pointData : Data["points"]) {
+		if (NumPoints > NUMBER_OF_STATIONS) {
+			std::cerr << "Maximum points reached" << std::endl;
+			IsRunning = false;
+			break;
+		}
+		if (!pointData["routeA"].is_null()) {
+			std::string RouteA = pointData["routeA"].get<std::string>();
+			ConnectPoints(Stations[NumPoints], GetPointFromID(RouteA.c_str()));
+		}
+		if (!pointData["routeB"].is_null()) {
+			std::string RouteA = pointData["routeB"].get<std::string>();
+			ConnectPoints(Stations[NumPoints], GetPointFromID(RouteA.c_str()));
+		}
+		NumPoints++;
+	}
+
+	/*Add trains*/
+	for (const auto& trainData : Data["trains"]) {
+		bool ShoulMove = trainData["isMoving"];
+		std::string Identifier = trainData["identifier"].get<std::string>();
+		std::string InitialStationID = trainData["initialStationID"].get<std::string>();
+		int MaxTrips = trainData["maxTrips"];
+		Trains[NumTrains] = Game::AddTrain(GetPointFromID(InitialStationID.c_str()), ShoulMove, Identifier.c_str(), MaxTrips);
+		NumTrains++;
+	}
 };
 
-RailwayPoint* Game::AddPoint(const char* TexturePath, Vector2D<int> Coordinates, const char* Identifier, const char* Type) {
+RailwayPoint* Game::AddPoint(Vector2D<int> Coordinates, const char* Identifier, const char* Type) {
 	
 	Coordinates.x = int(Coordinates.x * TILE_WIDTH);
 	Coordinates.y = int(Coordinates.y * TILE_HEIGHT);
 	StationsCounter++;
-	return new RailwayPoint(Renderer, TexturePath, Coordinates, Identifier, Type);;
+	return new RailwayPoint(Renderer, Coordinates, Identifier, Type);
 
 }
 
@@ -261,30 +321,58 @@ void Game::DisconnectPoints(RailwayPoint* PointA, RailwayPoint* PointB) {
 
 }
 
-bool Game::SwapNextPoints(RailwayPoint* Station, RailwayPoint* PointA, RailwayPoint* PointB) {
-	/*Check for collisions*/
+void Game::HandleHitsUnderCursor() {
+	/*Get the coordinates of the click*/
+	int x, y;
+	bool CanSwapLine{true};
+	double DistanceToCursor{};
+	SDL_GetMouseState(&x, &y);
+	//std::cout << "Clicked Left mouse button at tile coordinates " << x << "," << y << std::endl;
+	
+	/*Check for train hit*/
 	for (int i = 0; i < TrainsCounter; i++) {
 		for (int j = 0; j < NUMBER_OF_CARS; j++) {
-			if ((Trains[i]->GetCar(j)->GetPosition() - Station->GetPosition()).ManhatanAbs() < GAME_OBJECT_WIDTH * 2)
-				return false;
+			DistanceToCursor = (Trains[i]->GetCar(j)->GetPosition() - Vector2D<int>{x-TILE_WIDTH/2, y-TILE_HEIGHT/2}).Abs();
+			if (DistanceToCursor <= TILE_HEIGHT/2) {
+				std::cout << "Distance to cursor = " << DistanceToCursor << std::endl;
+				Trains[i]->SetIsMoving(!Trains[i]->GetIsMoving());
+			}
 		}
 	}
-	/*Call the point swapping*/
-	Station->SwapNextPoint(PointA, PointB);
-	return true;
+	/*Check for station hit and handle line swapping*/
+	for (int i = 0; i < StationsCounter; i++) {
+		if ((Stations[i]->GetPosition() - Vector2D<int>{x - TILE_WIDTH / 2, y - TILE_HEIGHT / 2}).Abs() <= TILE_HEIGHT/2) {
+			for (int k = 0; k < TrainsCounter; k++) {//check if any train is at the station
+				for (int j = 0; j < NUMBER_OF_CARS; j++) {//check per car
+					if ((Trains[k]->GetCar(j)->GetPosition() - Stations[i]->GetPosition()).Abs() <= TILE_HEIGHT/2) {
+						CanSwapLine = false;// if there is a car at the station we must not swap lines
+					}
+				}
+			}
+			if(!Stations[i]->GetIsTrainInStation())//No cars at the station means we can swap lines
+				Stations[i]->SwapNextPoint(Stations[i]->GetNextPoint(1), Stations[i]->GetNextPoint(1));
+		
+		}
+			
+	}
+	/*...Other types*/
+	/*Nothing was clicked*/
 }
 
-int Game::CheckTrainCollision() {
-	int NumberOfCollisions{ 0 };
-	for (int i = 0; i < TrainsCounter && Trains[i]->GetIsMoving(); i++) {
-		for (int j = i+1; j < TrainsCounter && Trains[i]->GetIsMoving(); j++){	
-			for (int k = 0; k < NUMBER_OF_CARS && Trains[i]->GetIsMoving(); k++)
-				/*Check for collisions between trains*/
-				if ((Trains[i]->GetCar(0)->GetPosition() - Trains[j]->GetCar(k)->GetPosition()).ManhatanAbs() <= GAME_OBJECT_WIDTH) {
-					Trains[i]->SetIsMoving(false);
-					NumberOfCollisions++;
+bool Game::IsTrainInStation(RailwayPoint* Station) {
+		for (int j = 0; j < TrainsCounter; j++) {
+			for (int k = 0; k < NUMBER_OF_CARS; k++) {
+				if ((Station->GetPosition() - Trains[j]->GetCar(k)->GetPosition()).Abs() < GAME_OBJECT_HEIGHT) {
+					return true;
 				}
+			}
 		}
-	}
-	return NumberOfCollisions;
+		return false;
+}
+
+RailwayPoint* Game::GetPointFromID(const char* ID) {
+	for (int i = 0; i < StationsCounter; i++)
+		if (strcmp(ID, Stations[i]->GetIdentifier()) == 0)
+			return Stations[i];
+	return nullptr;
 }

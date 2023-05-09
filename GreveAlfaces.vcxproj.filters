@@ -71,6 +71,12 @@
     <ClInclude Include="Train.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="assets\json_parser\json.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="assets\json_parser\json_fwd.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\..\..\..\..\Projects\GreveAlfaces\resources\art\car_empty_01.png">
@@ -124,5 +130,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Saved\level_01.json" />
+    <None Include="assets\levels\level_01.json" />
   </ItemGroup>
 </Project>

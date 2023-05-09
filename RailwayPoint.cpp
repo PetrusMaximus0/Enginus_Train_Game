@@ -4,13 +4,13 @@
 #include <iostream>
 #include "TextureManager.h"
 
-RailwayPoint::RailwayPoint(SDL_Renderer* InRenderer, const char* TextureSheet, Vector2D<int> InCoordinates, const char* InIdentifier, const char* InType) :
-	GameObject(InRenderer, TextureSheet, InCoordinates)
+RailwayPoint::RailwayPoint(SDL_Renderer* InRenderer, Vector2D<int> InCoordinates, const char* InIdentifier, const char* InType) :
+	GameObject(InRenderer, InCoordinates)
 {	strncpy_s(Identifier, InIdentifier, sizeof(Identifier));
 	strncpy_s(Type, InType, sizeof(Type));
 
 	/*Set a random colored texture if the point is a station and set the waypoint texture otherwise*/
-	if (!strncmp("WPT", Type, sizeof("WPT"))) {
+	if (!strncmp("STA", Type, sizeof("STA"))) {
 		GACarColor NewColorType = (GACarColor)(rand() % 4);
 		SetPointColorType(NewColorType);
 	}
@@ -24,11 +24,6 @@ RailwayPoint::RailwayPoint(SDL_Renderer* InRenderer, const char* TextureSheet, V
 RailwayPoint::~RailwayPoint()
 {
 
-
-}
-
-void RailwayPoint::InitializePoint()
-{
 
 }
 
@@ -115,7 +110,7 @@ void RailwayPoint::SetPointColorType(GACarColor NewColor)
 		case(GACarColor::Empty):
 			SetTexture(TextureManager::LoadTexture(Renderer, "assets/art/waypoint_01.png"));
 			break;
-		}
+	}
 }
 
 const char* RailwayPoint::GetIdentifier()
@@ -127,21 +122,30 @@ void RailwayPoint::SwapNextPoint(RailwayPoint* NewNextPoint, RailwayPoint* NextP
 {
 	RailwayPoint* TempPoint{};
 	int NewNextPointIndex{};
+	if (!IsTrainInStation) {
+		/*Finds the index of the new next point*/
+		for (int i = 0; i < NumberOfExits; i++) {
+			if (NextPoints[i] == NewNextPoint) {
+				NewNextPointIndex = i;
+				break;
+			}
+		}
+		if (NewNextPointIndex != 0)
+		{
+			//Swap the array entries
+			TempPoint = NextPoints[0];
+			NextPoints[0] = NewNextPoint;
+			NextPoints[NewNextPointIndex] = TempPoint;
 
-	/*Finds the index of the new next point*/
-	for (int i = 0; i < NumberOfExits; i++) {
-		if (NextPoints[i] == NewNextPoint) {
-			NewNextPointIndex = i;
-			break;
 		}
 	}
-	if (NewNextPointIndex != 0)
-	{
-		//Swap the array entries
-		TempPoint = NextPoints[0];
-		NextPoints[0] = NewNextPoint;
-		NextPoints[NewNextPointIndex] = TempPoint;
-
-	}
+	
 
 }
+
+void RailwayPoint::SetTrainInStation(bool Value)
+{
+	IsTrainInStation = Value;
+}
+
+bool RailwayPoint::GetIsTrainInStation(){	return IsTrainInStation;}

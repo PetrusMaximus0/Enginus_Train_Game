@@ -20,14 +20,15 @@ public:
 	void AddTile(int TileId, Vector2D<int> Coordinates);
 	void InitializeTrains();
 
-	RailwayPoint* AddPoint(const char* TexturePath, Vector2D<int> Coordinates, const char* Identifier, const char* Type);
+	RailwayPoint* AddPoint(Vector2D<int> Coordinates, const char* Identifier, const char* Type);
 	void DeletePoint(RailwayPoint* Point);
 	Train* AddTrain(RailwayPoint* InitialStation, bool IsMoving, const char* Identifier, int MaxTrips);
 	void DeleteTrain(Train* Train);
 	void ConnectPoints(RailwayPoint* PointA, RailwayPoint* PointB);
 	void DisconnectPoints(RailwayPoint* PointA, RailwayPoint* PointB);
-	bool SwapNextPoints(RailwayPoint* Station, RailwayPoint* PointA, RailwayPoint* PointB);
-   	int CheckTrainCollision();
+	void HandleHitsUnderCursor();
+	bool IsTrainInStation(RailwayPoint* Station);
+	RailwayPoint* GetPointFromID(const char* ID);
 
 private:
 	SDL_Renderer* Renderer{};
@@ -37,4 +38,5 @@ private:
 	int StationsCounter{0};
 	int TrainsCounter{0};
 	TileTypes GameMap[GAME_WINDOW_HEIGHT / TILE_HEIGHT][GAME_WINDOW_WIDTH / TILE_WIDTH]{};
+
 };

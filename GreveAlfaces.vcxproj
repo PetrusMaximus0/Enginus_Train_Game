@@ -110,6 +110,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -144,6 +145,8 @@
     <ClCompile Include="Train.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="assets\json_parser\json.hpp" />
+    <ClInclude Include="assets\json_parser\json_fwd.hpp" />
     <ClInclude Include="ECS\Components.h" />
     <ClInclude Include="ECS\EntityComponentSystem.h" />
     <ClInclude Include="Game.h" />
@@ -175,6 +178,9 @@
     <Image Include="assets\art\waypoint_01.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="assets\levels\level_01.json">
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
+    </None>
     <None Include="Saved\level_01.json" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

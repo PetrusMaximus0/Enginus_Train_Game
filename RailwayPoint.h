@@ -5,10 +5,10 @@
 class RailwayPoint : public GameObject
 {
 private:
-	char Identifier[5]{};
+	char Identifier[3]{};
 	char Type[4]{};//station STA or waypoint WPT
 	RailwayPoint* NextPoints[MAX_CONNECTIONS_BETWEENPOINTS]{};
-	int CurrentRoute{ 0 }; //from zero up to max_connections_betweenpoints - 1
+	bool IsTrainInStation{};
 
 protected:
 	int NumberOfEntries{};
@@ -16,9 +16,8 @@ protected:
 	
 
 public:
-	RailwayPoint(SDL_Renderer* InRenderer, const char* TextureSheet, Vector2D<int> InCoordinates, const char* InIdentifier, const char* InType);
+	RailwayPoint(SDL_Renderer* InRenderer, Vector2D<int> InCoordinates, const char* InIdentifier, const char* InType);
 	~RailwayPoint();
-	void InitializePoint();
 	void SetNextPoint(RailwayPoint* NextPoint);
 	/*Clears pointer Point in the NextPoints Array, swaps last element of array 
 	with the place of the deleted element*/
@@ -31,6 +30,8 @@ public:
 	void SetPointColorType(GACarColor NewColor);
 	const char* GetIdentifier();
 	void SwapNextPoint(RailwayPoint* NewNextPoint, RailwayPoint* NextPoint);
+	void SetTrainInStation(bool Value);
+	bool GetIsTrainInStation();
 
 };
 

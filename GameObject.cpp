@@ -43,6 +43,7 @@ void GameObject::Render()
 
 void GameObject::SetTexture(SDL_Texture* NewTexture)
 {
+	SDL_DestroyTexture(Texture);
 	Texture = NewTexture;
 }
 

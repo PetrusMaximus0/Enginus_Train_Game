@@ -1,0 +1,16 @@
+{  
+  "Trains":{
+	  "RowName_0":{
+		  "Identifier": "CA",
+		  "InitialStationID": "01",
+		  "IsMoving": true,
+		  "MaxTrips": 5 
+		},
+		"RowName_1":{
+		  "Identifier": "CO",
+		  "InitialStationID": "00",
+		  "IsMoving": true,
+		  "MaxTrips": 5
+		}
+	}
+}

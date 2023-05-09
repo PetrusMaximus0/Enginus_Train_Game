@@ -4,7 +4,8 @@
 #include "Library.h"
 #include "RailwayPoint.h"
 
-#define NUMBER_OF_CARS 4
+#define NUMBER_OF_CARS 5
+
 class Train
 {
 private:
@@ -19,12 +20,13 @@ private:
 	int MaxTrips{};
 	int TripsCompleted{};
 	bool WinConditon{};
+	bool WaitingForSpawn{};
+	float RemainingStopTime{};
 	
 public:
 	Train(SDL_Renderer* InRenderer, bool InIsMoving, const char* InIdentifier, RailwayPoint* InitialStation, int InMaxTrips = 10);
-	SDL_Texture* SetWagonTexture(GACarColor NewColor, int WagonID);
 
-	void SetColorType(GACarColor NewColor, int CarID);
+	void SetCarColorType(GACarColor NewColor, int CarID);
 
 	~Train();
 
@@ -53,6 +55,6 @@ public:
 	bool GetIsActive();
 
 	void CheckWinCondition();
-
+	void DeSpawn();
 };
 

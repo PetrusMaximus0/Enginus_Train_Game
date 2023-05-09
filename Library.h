@@ -13,6 +13,10 @@ struct Vector2D {
 	int ManhatanAbs() {
 		return (int)(abs(x) + abs(y));
 	}
+
+	double Abs() {
+		return sqrt(pow(x,2) + pow(y,2));
+	}
 	/*Returns the int type vector2d with the non zero component with absolute value of one*/
 	Vector2D<int> Normalize() {
 		if (x != 0)
@@ -41,7 +45,7 @@ struct Vector2D {
 		return result;
 	}
 
-	Vector2D operator * (const int other) const {
+	Vector2D operator * (const Type other) const {
 	
 		Vector2D result;
 		result.x = x * other;
@@ -51,7 +55,7 @@ struct Vector2D {
 	
 	}
 
-	Vector2D operator / (const int other) const {
+	Vector2D operator / (const Type other) const {
 
 		Vector2D result;
 		result.x = x / other;
@@ -59,6 +63,13 @@ struct Vector2D {
 
 		return result;
 
+	}
+
+	bool operator == (const Vector2D<Type>& other) const {
+		return other.x == x && other.y == y;
+	}
+	bool operator != (const Vector2D& other) const {
+		return other.x != x || other.y != y;
 	}
 
 };

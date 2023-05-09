@@ -5,7 +5,11 @@
       <FullPath>H:\Enginus\x64\Debug\Enginus.exe</FullPath>
     </ProjectOutput>
   </ProjectOutputs>
-  <ContentFiles />
+  <ContentFiles>
+    <ContentFile>
+      <FullPath>H:\Enginus\assets\levels\level_01.json</FullPath>
+    </ContentFile>
+  </ContentFiles>
   <SatelliteDlls />
   <NonRecipeFileRefs />
 </Project>
