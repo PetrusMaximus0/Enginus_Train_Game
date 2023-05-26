@@ -1,4 +1,11 @@
-﻿  Map.cpp
+﻿  Game.cpp
+  GameObject.cpp
+  main.cpp
+  Map.cpp
+  RailwayPoint.cpp
+  TextureManager.cpp
+  Train.cpp
+  Generating Code...
 LINK : warning LNK4075: ignoring '/INCREMENTAL' due to '/PROFILE' specification
 Game.obj : warning LNK4075: ignoring '/EDITANDCONTINUE' due to '/OPT:REF' specification
-  GreveAlfaces.vcxproj -> H:\Enginus\x64\Debug\Enginus.exe
+  GreveAlfaces.vcxproj -> C:\Projects\Enginus\x64\Debug\Enginus.exe
