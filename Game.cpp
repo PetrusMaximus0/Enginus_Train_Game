@@ -7,14 +7,14 @@
 #include <fstream>
 
 #define NUMBER_OF_STATIONS 100
-#define NUMBER_OF_TRAINS 100
+#define MAX_NUMBER_OF_TRAINS 100
 
 // 
 //TEMPORARY GLOBALS
 
 Map* GameWorld{};
 RailwayPoint* Stations[NUMBER_OF_STATIONS]{};
-Train* Trains[NUMBER_OF_TRAINS]{};
+Train* Trains[MAX_NUMBER_OF_TRAINS]{};
 
 Game::Game() {
 	/*Default constructor for class Game*/
