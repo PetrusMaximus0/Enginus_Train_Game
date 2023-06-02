@@ -30,7 +30,7 @@
 
 
   ],
-  
+
   "points": [
     {
       "identifier": "00",
@@ -113,5 +113,22 @@
       "y": 4
     }
 
+  ],
+  "signals": [
+    {
+      "targetX": 19,
+      "targetY": 12,
+      "positionX": 19,
+      "positionY": 11,
+      "greenLight": false
+    },
+    {
+      "targetX": 21,
+      "targetY": 14,
+      "positionX": 20,
+      "positionY": 14,
+      "greenLight": true
+
+    }
   ]
 }
