@@ -6,6 +6,7 @@
 #include "Library.h"
 #include "Train.h"
 #include "RailwayPoint.h"
+#include "RailwaySignal.h"
 
 class Game{
 public:
@@ -30,6 +31,10 @@ public:
 	bool IsTrainInStation(RailwayPoint* Station);
 	RailwayPoint* GetPointFromID(const char* ID);
 
+	RailwaySignal* AddSignal(Vector2D<int> Position, Vector2D<int> TargetPosition, bool GreenLight);
+
+	void DeleteSignal(RailwaySignal* Signal);
+
 private:
 	SDL_Renderer* Renderer{};
 	bool IsRunning{};
@@ -37,6 +42,7 @@ private:
 	int UpdateCounter{0};
 	int StationsCounter{0};
 	int TrainsCounter{0};
+	int SignalsCounter{0};
 	TileTypes GameMap[GAME_WINDOW_HEIGHT / TILE_HEIGHT][GAME_WINDOW_WIDTH / TILE_WIDTH]{};
 
 };

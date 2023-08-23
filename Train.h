@@ -22,7 +22,8 @@ private:
 	bool WinConditon{};
 	bool WaitingForSpawn{};
 	float RemainingStopTime{};
-	
+	void StopTrain();
+
 public:
 	Train(SDL_Renderer* InRenderer, bool InIsMoving, const char* InIdentifier, RailwayPoint* InitialStation, int InMaxTrips = 10);
 
@@ -46,8 +47,6 @@ public:
 
 	bool GetIsMoving();
 
-	void StopTrain();
-
 	void Respawn();
 
 	void MarkForDeletion();
@@ -55,6 +54,9 @@ public:
 	bool GetIsActive();
 
 	void CheckWinCondition();
+
 	void DeSpawn();
+
+	void TemporaryStop(float time);
 };
 

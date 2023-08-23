@@ -141,6 +141,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="RailwayPoint.cpp" />
+    <ClCompile Include="RailwaySignal.cpp" />
     <ClCompile Include="TextureManager.cpp" />
     <ClCompile Include="Train.cpp" />
   </ItemGroup>
@@ -152,6 +153,7 @@
     <ClInclude Include="Library.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="RailwayPoint.h" />
+    <ClInclude Include="RailwaySignal.h" />
     <ClInclude Include="TextureManager.h" />
     <ClInclude Include="Train.h" />
   </ItemGroup>
@@ -162,11 +164,15 @@
     <Image Include="assets\art\car_green_01.png" />
     <Image Include="assets\art\car_orange_01.png" />
     <Image Include="assets\art\car_purple_01.png" />
+    <Image Include="assets\art\railway_light_green.png" />
+    <Image Include="assets\art\railway_light_red.png" />
+    <Image Include="assets\art\station_arrow.png" />
     <Image Include="assets\art\station_blue_01.png" />
     <Image Include="assets\art\station_green_01.png" />
     <Image Include="assets\art\station_orange_01.png" />
     <Image Include="assets\art\station_purple_01.png" />
     <Image Include="assets\art\tilesReference.jpg" />
+    <Image Include="assets\art\tiles_terrain.png" />
     <Image Include="assets\art\tile_dirt_01.png" />
     <Image Include="assets\art\tile_grass_01.png" />
     <Image Include="assets\art\tile_track_basic_01.png" />
@@ -174,9 +180,11 @@
     <Image Include="assets\art\waypoint_01.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="assets\levels\level_00.json" />
     <None Include="assets\levels\level_01.json">
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
     </None>
+    <None Include="assets\levels\level_02.json" />
     <None Include="Saved\level_01.json" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

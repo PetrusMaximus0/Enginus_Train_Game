@@ -92,4 +92,10 @@ enum class GACarColor : unsigned char {
 	Empty
 };
 
-
+template <class Type>
+Vector2D<int> TileToPixelCoordinates(Vector2D<Type> Coordinates ) {
+	Vector2D<int> TileCoordinates{};
+	TileCoordinates.x = int(Coordinates.x * TILE_WIDTH);
+	TileCoordinates.y = int(Coordinates.y * TILE_HEIGHT);
+	return TileCoordinates;
+}

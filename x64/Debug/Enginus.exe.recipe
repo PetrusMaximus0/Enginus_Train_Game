@@ -2,12 +2,12 @@
 <Project>
   <ProjectOutputs>
     <ProjectOutput>
-      <FullPath>C:\Projects\Enginus\x64\Debug\Enginus.exe</FullPath>
+      <FullPath>H:\Enginus\x64\Debug\Enginus.exe</FullPath>
     </ProjectOutput>
   </ProjectOutputs>
   <ContentFiles>
     <ContentFile>
-      <FullPath>C:\Projects\Enginus\assets\levels\level_01.json</FullPath>
+      <FullPath>H:\Enginus\assets\levels\level_01.json</FullPath>
     </ContentFile>
   </ContentFiles>
   <SatelliteDlls />

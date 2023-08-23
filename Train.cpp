@@ -128,8 +128,7 @@ void Train::HandleCarStationInteraction() {
 				SetCarColorType(GACarColor::Empty, i);
 
 				/*StopCars for a few seconds*/
-				RemainingStopTime = 1.5 * 200;// 3 seconds because 200 frames per second
-				IsMoving = false;
+				TemporaryStop(1.5 * 200);// x multiplies by frames per second
 				
 			}
 			//set a new destination or stops the train if there isn't one
@@ -205,4 +204,10 @@ void Train::DeSpawn() {
 	WaitingForSpawn = true;
 	IsMoving = false;
 
+}
+
+void Train::TemporaryStop(float time)
+{
+	RemainingStopTime = time;
+	SetIsMoving(false);
 }

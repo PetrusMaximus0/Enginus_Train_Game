@@ -36,6 +36,9 @@
     <ClCompile Include="Train.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="RailwaySignal.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -63,6 +66,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="assets\json_parser\json_fwd.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RailwaySignal.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -115,9 +121,23 @@
     <Image Include="assets\art\station_purple_01.png">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="assets\art\railway_light_red.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\art\railway_light_green.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\art\station_arrow.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\art\tiles_terrain.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <None Include="Saved\level_01.json" />
     <None Include="assets\levels\level_01.json" />
+    <None Include="assets\levels\level_00.json" />
+    <None Include="assets\levels\level_02.json" />
   </ItemGroup>
 </Project>
