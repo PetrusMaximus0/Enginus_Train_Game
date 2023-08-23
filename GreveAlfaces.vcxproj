@@ -147,14 +147,10 @@
   <ItemGroup>
     <ClInclude Include="assets\json_parser\json.hpp" />
     <ClInclude Include="assets\json_parser\json_fwd.hpp" />
-    <ClInclude Include="ECS\Components.h" />
-    <ClInclude Include="ECS\EntityComponentSystem.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="Library.h" />
     <ClInclude Include="Map.h" />
-    <ClInclude Include="ECS\PositionComponent.h" />
-    <ClInclude Include="ECS\SpriteComponent.h" />
     <ClInclude Include="RailwayPoint.h" />
     <ClInclude Include="TextureManager.h" />
     <ClInclude Include="Train.h" />
