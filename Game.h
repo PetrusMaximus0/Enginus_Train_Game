@@ -7,19 +7,26 @@
 #include "Train.h"
 #include "RailwayPoint.h"
 #include "RailwaySignal.h"
+#include "assets/json_parser/json.hpp"
 
 class Game{
 public:
-	Game();
+	Game(const char* title, int PositionX, int PositionY, int Width, int Height, bool IsFullscreen);
 	~Game();
-	void Init(const char* title, int PositionX, int PositionY, int Width, int Height, bool IsFullscreen);
 	void HandleEvents();
 	void Update();
 	void Render();
 	void Clean();
 	bool GetIsRunning();
 	void AddTile(int TileId, Vector2D<int> Coordinates);
-	void InitializeTrains();
+
+	
+	nlohmann::json LoadGameData();
+	//
+	void InitializeSDL(const char* title, int PositionX, int PositionY, int Width, int Height, bool IsFullscreen);
+	void InitializePoints(nlohmann::json Data);
+	void InitializeTrains(nlohmann::json Data);
+	void InitializeSignals(nlohmann::json Data);
 
 	RailwayPoint* AddPoint(Vector2D<int> Coordinates, const char* Identifier, const char* Type);
 	void DeletePoint(RailwayPoint* Point);

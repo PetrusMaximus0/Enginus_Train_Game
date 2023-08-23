@@ -14,8 +14,7 @@ int main(int argc, char* args[]) {
 	Uint32 FrameStart{ 0 };
 	int FrameTime{ 0 };
 	/*INITIALIZE A GAME INSTANCE*/
-	OGame = new Game();
-	OGame->Init("Enginus", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, GAME_WINDOW_WIDTH, GAME_WINDOW_HEIGHT, false);
+	OGame = new Game("Enginus", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, GAME_WINDOW_WIDTH, GAME_WINDOW_HEIGHT, false);
 	
 	/*MAIN GAME LOOP*/
 	while (OGame->GetIsRunning()) {

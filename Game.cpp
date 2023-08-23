@@ -2,7 +2,7 @@
 #include "Game.h"
 #include "GameObject.h"
 #include "Map.h"
-#include "assets/json_parser/json.hpp"
+
 #include <fstream>
 
 #define NUMBER_OF_STATIONS 100
@@ -17,7 +17,7 @@ RailwayPoint* Stations[NUMBER_OF_STATIONS]{};
 Train* Trains[MAX_NUMBER_OF_TRAINS]{};
 RailwaySignal* TrafficSignals[MAX_NUMBER_OF_TRAFFIC_SIGNS]{};
 
-Game::Game() {
+Game::Game(const char* title, int PositionX, int PositionY, int Width, int Height, bool IsFullscreen) {
 	/*Default constructor for class Game*/
 	IsRunning = false;
 
@@ -27,41 +27,19 @@ Game::Game() {
 			GameMap[i][j] = TileTypes::Grass;
 		}
 	}
+
+	InitializeSDL(title, PositionX, PositionY, Width, Height, IsFullscreen);
+
+	nlohmann::json Data = LoadGameData();
+	InitializePoints(Data);
+	InitializeTrains(Data);
+	InitializeSignals(Data);
+
+	GameWorld = new Map(Renderer);
 }
 
 Game::~Game() {
 	/*Default destructor for class Game*/
-}
-
-void Game::Init(const char* title, int PositionX, int PositionY, int Width, int Height, bool IsFullscreen)
-{
-	/*Initialize SDL, window and renderer. Initializes the trains and stations*/
-	//full or windowed screen mode 
-	int Flag{ 0 };
-	IsFullscreen ? Flag = SDL_WINDOW_FULLSCREEN : false;
-	
-	//Initialize SDL window and renderer
-	if (SDL_Init(SDL_INIT_EVERYTHING) == 0) {
-		std::cout << "Subsystems Initialized... " << std::endl;
-		Window = SDL_CreateWindow(title, PositionX, PositionY, Width, Height, Flag);
-		
-		if (Window) {
-			std::cout << "Window Created..." << std::endl;
-			Renderer = SDL_CreateRenderer(Window, -1, 0);
-			
-			if (Renderer) {
-				std::cout << "Renderer Created" << std::endl;
-				SDL_SetRenderDrawColor(Renderer, 255, 255, 255, 255);
-				IsRunning = true;
-
-			}
-		}
-	}
-
-	InitializeTrains();
-
-	GameWorld = new Map(Renderer);
-
 }
 
 void Game::HandleEvents(){
@@ -113,7 +91,7 @@ void Game::Update()
 			if (i != j) {
 				for (int k = 0; k < NUMBER_OF_CARS; k++)
 					if ((Trains[i]->GetCar(0)->GetPosition() - Trains[j]->GetCar(k)->GetPosition()).Abs() <= GAME_OBJECT_WIDTH) {
-						Trains[i]->SetIsMoving(false);
+						Trains[i]->TemporaryStop(1.5f*200);
 						break;
 					}
 			}	
@@ -195,8 +173,8 @@ void Game::AddTile(int TileId, Vector2D<int> Coordinates) {
 
 }
 
-//this function initializes all game objects and map, refactor for more readability
-void Game::InitializeTrains() {
+nlohmann::json Game::LoadGameData()
+{
 	/*Load game data from a json file*/
 	/*Load the json file*/
 	using json = nlohmann::json;
@@ -208,11 +186,40 @@ void Game::InitializeTrains() {
 	json Data;
 	file >> Data;
 	std::cout << Data.dump(4) << std::endl;
+	return Data;
+}
 
-	int NumPoints = 0;
-	int NumTrains = 0;
-	int NumSignals = 0;
+void Game::InitializeSDL(const char* title, int PositionX, int PositionY, int Width, int Height, bool IsFullscreen)
+{
+	/*Initialize SDL, window and renderer. Initializes the trains and stations*/
+//full or windowed screen mode 
+	int Flag{ 0 };
+	IsFullscreen ? Flag = SDL_WINDOW_FULLSCREEN : false;
 
+	//Initialize SDL window and renderer
+	if (SDL_Init(SDL_INIT_EVERYTHING) == 0) {
+		std::cout << "Subsystems Initialized... " << std::endl;
+		Window = SDL_CreateWindow(title, PositionX, PositionY, Width, Height, Flag);
+
+		if (Window) {
+			std::cout << "Window Created..." << std::endl;
+			Renderer = SDL_CreateRenderer(Window, -1, 0);
+
+			if (Renderer) {
+				std::cout << "Renderer Created" << std::endl;
+				SDL_SetRenderDrawColor(Renderer, 255, 255, 255, 255);
+				IsRunning = true;
+
+			}
+		}
+	}
+
+
+}
+void Game::InitializePoints(nlohmann::json Data)
+{
+	int NumPoints{};
+	
 	/*Load Stations*/
 	for (const auto& pointData : Data["points"]) {
 		if (NumPoints > NUMBER_OF_STATIONS) {
@@ -247,8 +254,11 @@ void Game::InitializeTrains() {
 		}
 		NumPoints++;
 	}
-
+}
+void Game::InitializeTrains(nlohmann::json Data) {
 	/*Add trains*/
+	int NumTrains{};
+
 	for (const auto& trainData : Data["trains"]) {
 		bool ShoulMove = trainData["isMoving"];
 		std::string Identifier = trainData["identifier"].get<std::string>();
@@ -257,12 +267,14 @@ void Game::InitializeTrains() {
 		Trains[NumTrains] = Game::AddTrain(GetPointFromID(InitialStationID.c_str()), ShoulMove, Identifier.c_str(), MaxTrips);
 		NumTrains++;
 	}
-
+}
+void Game::InitializeSignals(nlohmann::json Data)
+{
 	/*Add signals*/
-
+	int NumSignals{};
 	for (const auto& signalData : Data["signals"]) {
 		bool GreenLight = signalData["greenLight"];
-		
+
 		Vector2D<int> Coordinates;
 		Coordinates.x = signalData["positionX"].get<int>();
 		Coordinates.y = signalData["positionY"].get<int>();
@@ -274,10 +286,8 @@ void Game::InitializeTrains() {
 		TrafficSignals[NumSignals] = Game::AddSignal(Coordinates, TargetCoordinates, GreenLight);
 		NumSignals++;
 	}
+}
 
-	std::cout << "Signals Added " << NumSignals << std::endl;
-
-};
 
 RailwayPoint* Game::AddPoint(Vector2D<int> Coordinates, const char* Identifier, const char* Type) {
 	
