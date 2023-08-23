@@ -1,2 +1,0 @@
-H:\Enginus\x64\Debug\Enginus.exe
-C:\Projects\Enginus\x64\Debug\Enginus.exe

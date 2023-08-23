@@ -1,4 +1,0 @@
-﻿  Game.cpp
-LINK : warning LNK4075: ignoring '/INCREMENTAL' due to '/PROFILE' specification
-Game.obj : warning LNK4075: ignoring '/EDITANDCONTINUE' due to '/OPT:REF' specification
-  GreveAlfaces.vcxproj -> H:\Enginus\x64\Debug\Enginus.exe
