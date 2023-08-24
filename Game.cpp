@@ -168,11 +168,6 @@ void Game::Clean()
 
 bool Game::GetIsRunning(){return IsRunning;}
 
-void Game::AddTile(int TileId, Vector2D<int> Coordinates) {
-
-
-}
-
 nlohmann::json Game::LoadGameData()
 {
 	/*Load game data from a json file*/
@@ -303,7 +298,6 @@ void Game::DeletePoint(RailwayPoint* Point)
 	for (int j = 0; j < StationsCounter; j++) {//iterate through every Station
 		for (int i = 0; i < Stations[j]->GetAccessNumbers().y; i++) {//Iterate through the Exits
 			if (Stations[j]->GetNextPoint(i) == Point) {//if it matches the point that we want
-				DisconnectPoints(Stations[j], Point);//Remov the track from the map
 				Stations[j]->ClearNextPoint(Point, i);//Sever the connection to this point
 				break;
 			}
@@ -367,11 +361,6 @@ void Game::ConnectPoints(RailwayPoint* PointA, RailwayPoint* PointB) {
 			GameMap[TrackCoordinate][CoordsA.x] = TileTypes::TrackHorizontal;
 		}
 	}
-
-}
-
-void Game::DisconnectPoints(RailwayPoint* PointA, RailwayPoint* PointB) {
-
 
 }
 

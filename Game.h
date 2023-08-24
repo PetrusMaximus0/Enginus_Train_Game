@@ -18,9 +18,7 @@ public:
 	void Render();
 	void Clean();
 	bool GetIsRunning();
-	void AddTile(int TileId, Vector2D<int> Coordinates);
-
-	
+	//
 	nlohmann::json LoadGameData();
 	//
 	void InitializeSDL(const char* title, int PositionX, int PositionY, int Width, int Height, bool IsFullscreen);
@@ -33,7 +31,7 @@ public:
 	Train* AddTrain(RailwayPoint* InitialStation, bool IsMoving, const char* Identifier, int MaxTrips);
 	void DeleteTrain(Train* Train);
 	void ConnectPoints(RailwayPoint* PointA, RailwayPoint* PointB);
-	void DisconnectPoints(RailwayPoint* PointA, RailwayPoint* PointB);
+
 	void HandleHitsUnderCursor();
 	bool IsTrainInStation(RailwayPoint* Station);
 	RailwayPoint* GetPointFromID(const char* ID);
