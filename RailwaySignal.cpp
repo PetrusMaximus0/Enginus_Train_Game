@@ -24,7 +24,6 @@ void RailwaySignal::Render() {
 
 }
 
-
 void RailwaySignal::SetGreenLight(bool Value = true) {
 	GreenLight = Value;
 	if (Value) {

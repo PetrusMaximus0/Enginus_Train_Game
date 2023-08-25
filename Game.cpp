@@ -68,10 +68,6 @@ void Game::HandleEvents(){
 
 		}
 	}
-	
-
-
-
 }
 
 void Game::Update()
@@ -282,7 +278,6 @@ void Game::InitializeSignals(nlohmann::json Data)
 		NumSignals++;
 	}
 }
-
 
 RailwayPoint* Game::AddPoint(Vector2D<int> Coordinates, const char* Identifier, const char* Type) {
 	

@@ -25,21 +25,21 @@ public:
 	void InitializePoints(nlohmann::json Data);
 	void InitializeTrains(nlohmann::json Data);
 	void InitializeSignals(nlohmann::json Data);
-
+	//
 	RailwayPoint* AddPoint(Vector2D<int> Coordinates, const char* Identifier, const char* Type);
 	void DeletePoint(RailwayPoint* Point);
+	void ConnectPoints(RailwayPoint* PointA, RailwayPoint* PointB);
+	RailwayPoint* GetPointFromID(const char* ID);
+	//
+	void HandleHitsUnderCursor();
+	//
 	Train* AddTrain(RailwayPoint* InitialStation, bool IsMoving, const char* Identifier, int MaxTrips);
 	void DeleteTrain(Train* Train);
-	void ConnectPoints(RailwayPoint* PointA, RailwayPoint* PointB);
-
-	void HandleHitsUnderCursor();
 	bool IsTrainInStation(RailwayPoint* Station);
-	RailwayPoint* GetPointFromID(const char* ID);
-
+	//
 	RailwaySignal* AddSignal(Vector2D<int> Position, Vector2D<int> TargetPosition, bool GreenLight);
-
 	void DeleteSignal(RailwaySignal* Signal);
-
+	
 private:
 	SDL_Renderer* Renderer{};
 	bool IsRunning{};
