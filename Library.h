@@ -1,9 +1,10 @@
 #pragma once
 
-#define TILE_WIDTH 32
-#define TILE_HEIGHT 32
-#define GAME_WINDOW_WIDTH 1376
-#define GAME_WINDOW_HEIGHT 768
+constexpr int TILE_WIDTH{ 32 };
+constexpr int TILE_HEIGHT{ 32 };
+constexpr int GAME_WINDOW_WIDTH{ 1376 };
+constexpr int GAME_WINDOW_HEIGHT{ 768 };
+
 
 template <class Type>
 struct Vector2D {

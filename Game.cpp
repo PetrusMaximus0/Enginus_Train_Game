@@ -5,9 +5,9 @@
 
 #include <fstream>
 
-#define NUMBER_OF_STATIONS 100
-#define MAX_NUMBER_OF_TRAINS 100
-#define MAX_NUMBER_OF_TRAFFIC_SIGNS 100
+constexpr int NUMBER_OF_STATIONS{ 100 };
+constexpr int MAX_NUMBER_OF_TRAINS{ 100 };
+constexpr int MAX_NUMBER_OF_TRAFFIC_SIGNS{ 100 };
 
 // 
 //TEMPORARY GLOBALS

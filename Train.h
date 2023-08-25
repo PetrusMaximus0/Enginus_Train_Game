@@ -4,7 +4,7 @@
 #include "Library.h"
 #include "RailwayPoint.h"
 
-#define NUMBER_OF_CARS 5
+constexpr int NUMBER_OF_CARS{ 4 };
 
 class Train
 {

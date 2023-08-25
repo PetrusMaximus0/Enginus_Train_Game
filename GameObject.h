@@ -3,8 +3,8 @@
 #include <SDL_image.h>
 #include "Library.h"
 
-#define GAME_OBJECT_WIDTH 32
-#define GAME_OBJECT_HEIGHT 32
+constexpr int GAME_OBJECT_WIDTH{ 32 };
+constexpr int GAME_OBJECT_HEIGHT{ 32 };
 
 class GameObject
 {
