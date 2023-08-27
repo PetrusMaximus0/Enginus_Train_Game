@@ -2,7 +2,6 @@
 #include "Game.h"
 #include "GameObject.h"
 #include "Map.h"
-
 #include <fstream>
 
 constexpr int NUMBER_OF_STATIONS{ 100 };
@@ -37,7 +36,6 @@ Game::Game(const char* title, int PositionX, int PositionY, int Width, int Heigh
 
 	GameWorld = new Map(Renderer);
 }
-
 Game::~Game() {
 	/*Default destructor for class Game*/
 }
@@ -69,7 +67,6 @@ void Game::HandleEvents(){
 		}
 	}
 }
-
 void Game::Update()
 {
 	/*Updates the game state with new information */
@@ -86,7 +83,7 @@ void Game::Update()
 		for (int j = 0; j < TrainsCounter; j++) {
 			if (i != j) {
 				for (int k = 0; k < NUMBER_OF_CARS; k++)
-					if ((Trains[i]->GetCar(0)->GetPosition() - Trains[j]->GetCar(k)->GetPosition()).Abs() <= GAME_OBJECT_WIDTH) {
+					if ((Trains[i]->GetCar(0)->GetTransformComponent()->GetPosition() - Trains[j]->GetCar(k)->GetTransformComponent()->GetPosition()).Abs() <= GAME_OBJECT_WIDTH) {
 						Trains[i]->TemporaryStop(1.5f*200);
 						break;
 					}
@@ -104,7 +101,7 @@ void Game::Update()
 	for (int i = 0; i < SignalsCounter; i++) {
 		if (!TrafficSignals[i]->GetGreenLight()) {
 			for (int j = 0; j < TrainsCounter; j++) {
-				if ((TrafficSignals[i]->GetTargetPosition() - Trains[j]->GetCar(0)->GetPosition()).Abs() < TILE_HEIGHT) {
+				if ((TrafficSignals[i]->GetTargetPosition() - Trains[j]->GetCar(0)->GetTransformComponent()->GetPosition()).Abs() < TILE_HEIGHT) {
 					Trains[j]->TemporaryStop(1.5f*200);
 				}
 			}
@@ -113,7 +110,6 @@ void Game::Update()
 		
 	}
 }
-
 void Game::Render()
 {
 	/*Renders the game elements with the SDL library */
@@ -161,7 +157,6 @@ void Game::Clean()
 	std::cout << "Cleared Map\n";
 	std::cout << "Game cleaning complete!" << std::endl;
 }
-
 bool Game::GetIsRunning(){return IsRunning;}
 
 nlohmann::json Game::LoadGameData()
@@ -179,7 +174,6 @@ nlohmann::json Game::LoadGameData()
 	std::cout << Data.dump(4) << std::endl;
 	return Data;
 }
-
 void Game::InitializeSDL(const char* title, int PositionX, int PositionY, int Width, int Height, bool IsFullscreen)
 {
 	/*Initialize SDL, window and renderer. Initializes the trains and stations*/
@@ -219,10 +213,14 @@ void Game::InitializePoints(nlohmann::json Data)
 			break;
 		}
 		Vector2D<int> Coordinates;
+		TransformComponent* Transform;
+
 		Coordinates.x = pointData["x"].get<int>();
 		Coordinates.y = pointData["y"].get<int>();
 		std::string Identifier{ pointData["identifier"].get<std::string>() };
 		std::string  PointType{ pointData["pointType"].get<std::string>() };
+
+
 		Stations[NumPoints] = Game::AddPoint(Coordinates, Identifier.c_str(), PointType.c_str());
 		NumPoints++;
 	}
@@ -285,7 +283,7 @@ RailwayPoint* Game::AddPoint(Vector2D<int> Coordinates, const char* Identifier, 
 	StationsCounter++;
 	return new RailwayPoint(Renderer, Coordinates, Identifier, Type);
 
-}
+} 
 
 void Game::DeletePoint(RailwayPoint* Point)
 {

@@ -18,7 +18,6 @@ RailwayPoint::RailwayPoint(SDL_Renderer* InRenderer, Vector2D<int> InCoordinates
 		SetPointColorType(GACarColor::Empty);
 	
 	}
-
 }
 
 RailwayPoint::~RailwayPoint()
@@ -95,7 +94,6 @@ void RailwayPoint::SetPointColorType(GACarColor NewColor)
 			break;
 
 		case(GACarColor::Green):
-
 			SetTexture(TextureManager::LoadTexture(Renderer, "assets/art/station_green_01.png"));
 			break;
 

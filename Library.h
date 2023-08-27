@@ -5,7 +5,6 @@ constexpr int TILE_HEIGHT{ 32 };
 constexpr int GAME_WINDOW_WIDTH{ 1376 };
 constexpr int GAME_WINDOW_HEIGHT{ 768 };
 
-
 template <class Type>
 struct Vector2D {
 	Type x{};
@@ -37,12 +36,26 @@ struct Vector2D {
 		return result;
 	}
 
+	Vector2D operator += (const Vector2D& other) const {
+		Vector2D result;
+		result.x += other.x;
+		result.y += other.y;
+		return result;
+	}
+
 	Vector2D operator - (const Vector2D& other) const {
 
 		Vector2D result;
 
 		result.x = x - other.x;
 		result.y = y - other.y;
+		return result;
+	}
+
+	Vector2D operator -= (const Vector2D& other) const {
+		Vector2D result;
+		result.x -= other.x;
+		result.y -= other.y;
 		return result;
 	}
 
@@ -69,6 +82,8 @@ struct Vector2D {
 	bool operator == (const Vector2D<Type>& other) const {
 		return other.x == x && other.y == y;
 	}
+
+
 	bool operator != (const Vector2D& other) const {
 		return other.x != x || other.y != y;
 	}
