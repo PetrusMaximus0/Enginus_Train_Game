@@ -2,17 +2,14 @@
 #include "TextureManager.h"
 
 GameObject::GameObject(SDL_Renderer* InRenderer, TransformComponent Transform):
-	Renderer(InRenderer),
-	ColorType(InColorType)
+	Renderer(InRenderer)
 {
 	TransformComp = new TransformComponent(Transform);//Implemented Delete
 	SpriteComp = new SpriteComponent(InRenderer);//Implemented Delete
 }
 
 GameObject::GameObject(SDL_Renderer* InRenderer, const char* TextureSheet, TransformComponent Transform):
-	Renderer(InRenderer),
-	Texture(TextureManager::LoadTexture(Renderer, TextureSheet)),
-	ColorType(InColorType)
+	Renderer(InRenderer)
 {
 	TransformComp = new TransformComponent(Transform);//Implemented Delete
 	SpriteComp = new SpriteComponent(InRenderer);//Implemented Delete

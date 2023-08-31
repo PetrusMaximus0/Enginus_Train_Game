@@ -14,7 +14,7 @@ public:
 	Game(const char* title, int PositionX, int PositionY, int Width, int Height, bool IsFullscreen);
 	~Game();
 	void HandleEvents();
-	void Update();
+	void Update(float DeltaTime);
 	void Render();
 	void Clean();
 	bool GetIsRunning();
@@ -26,7 +26,7 @@ public:
 	void InitializeTrains(nlohmann::json Data);
 	void InitializeSignals(nlohmann::json Data);
 	//
-	RailwayPoint* AddPoint(Vector2D<float> Coordinates, const char* Identifier, const char* Type);
+	RailwayPoint* NewPoint(Vector2D<float> Coordinates, const char* Identifier, const char* Type);
 	void DeletePoint(RailwayPoint* Point);
 	void ConnectPoints(RailwayPoint* PointA, RailwayPoint* PointB);
 	RailwayPoint* GetPointFromID(const char* ID);
@@ -37,7 +37,7 @@ public:
 	void DeleteTrain(Train* Train);
 	bool IsTrainInStation(RailwayPoint* Station);
 	//
-	RailwaySignal* AddSignal(Vector2D<float> Position, Vector2D<float> TargetPosition, bool GreenLight);
+	RailwaySignal* NewSignal(Vector2D<float> Position, Vector2D<float> TargetPosition, bool GreenLight);
 	void DeleteSignal(RailwaySignal* Signal);
 	
 private:

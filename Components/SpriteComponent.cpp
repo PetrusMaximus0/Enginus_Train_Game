@@ -1,7 +1,5 @@
 #include "SpriteComponent.h"
 #include "../TextureManager.h"
-#include "../Library.h"
-
 
 SpriteComponent::SpriteComponent(SDL_Renderer* InRenderer):
 	Renderer(InRenderer)
@@ -15,6 +13,7 @@ SpriteComponent::~SpriteComponent()
 void SpriteComponent::SetTexture(const char* TexturePath)
 {
 	Texture = TextureManager::LoadTexture(Renderer, TexturePath);
+
 }
 
 void SpriteComponent::SetSourceRectangle(int X, int Y, int W, int H)
