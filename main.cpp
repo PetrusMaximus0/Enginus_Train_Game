@@ -13,7 +13,7 @@ int main(int argc, char* args[]) {
 	double deltaTime = 0;
 	
 	/*FRAME RATE LIMITING*/
-	const int FramesPerSecond{ 200 };
+	const int FramesPerSecond{ 60 };
 	const int FrameDelay{ 1000 / FramesPerSecond };
 	Uint32 FrameStart{ 0 };
 	int FrameTime{ 0 };
@@ -31,7 +31,7 @@ int main(int argc, char* args[]) {
 		FrameStart = SDL_GetTicks();
 
 		OGame->HandleEvents();
-		OGame->Update(1.f);
+		OGame->Update(1);
 		OGame->Render();
 		
 		//delay frame in case of 
