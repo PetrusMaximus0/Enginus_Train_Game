@@ -31,11 +31,11 @@ public:
 
 	~Train();
 
-	void Update();
+	void Update(float DeltaTime);
 
 	void Render();
 
-	void UpdateCars();
+	void UpdateCars(float DeltaTime);
 
 	void SetDestination(RailwayPoint* NewDestination, int CarID);
 

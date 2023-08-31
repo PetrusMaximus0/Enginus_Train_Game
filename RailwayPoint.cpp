@@ -143,3 +143,5 @@ void RailwayPoint::SetTrainInStation(bool Value)
 }
 
 bool RailwayPoint::GetIsTrainInStation(){return IsTrainInStation;}
+
+ColorType RailwayPoint::GetColorType() { return ColorType(); }

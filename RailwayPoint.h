@@ -35,6 +35,7 @@ public:
 	void SwapNextPoint(RailwayPoint* NewNextPoint, RailwayPoint* NextPoint);
 	void SetTrainInStation(bool Value);
 	bool GetIsTrainInStation();
+	ColorType GetColorType();
 
 };
 
