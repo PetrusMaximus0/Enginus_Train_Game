@@ -3,7 +3,7 @@
 SDL_Texture* TextureManager::LoadTexture(SDL_Renderer* Renderer,const char* FileName)
 {
     SDL_Texture* TempTexture = IMG_LoadTexture(Renderer, FileName);
-    if (TempTexture == NULL)
+    if (TempTexture == NULL){}
         std::cout << "ERROR - Failed to Load Texture in " << FileName << std::endl;
 
     return TempTexture;

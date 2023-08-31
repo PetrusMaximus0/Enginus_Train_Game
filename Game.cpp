@@ -4,13 +4,6 @@
 #include "Map.h"
 #include <fstream>
 
-constexpr int NUMBER_OF_STATIONS{ 100 };
-constexpr int MAX_NUMBER_OF_TRAINS{ 100 };
-constexpr int MAX_NUMBER_OF_TRAFFIC_SIGNS{ 100 };
-
-// 
-//TEMPORARY GLOBALS
-
 Map* GameWorld{};
 RailwayPoint* Stations[NUMBER_OF_STATIONS]{};
 Train* Trains[MAX_NUMBER_OF_TRAINS]{};
@@ -212,8 +205,10 @@ void Game::InitializePoints(nlohmann::json Data)
 			IsRunning = false;
 			break;
 		}
-		Vector2D<int> Coordinates;
-		TransformComponent* Transform;
+		Vector2D<float> Coordinates{};
+		TransformComponent {Vector2D<float>{0.f, 0.f}, Vector2D<float>{0.f, 0.f}, 0.f};
+
+		new GameObject(Renderer, TransformComponent{Vector2D<float>{0.f, 0.f}, Vector2D<float>{0.f, 0.f}, 0.f }, ColorType::Blue);
 
 		Coordinates.x = pointData["x"].get<int>();
 		Coordinates.y = pointData["y"].get<int>();
@@ -264,11 +259,11 @@ void Game::InitializeSignals(nlohmann::json Data)
 	for (const auto& signalData : Data["signals"]) {
 		bool GreenLight = signalData["greenLight"];
 
-		Vector2D<int> Coordinates;
+		Vector2D<float> Coordinates;
 		Coordinates.x = signalData["positionX"].get<int>();
 		Coordinates.y = signalData["positionY"].get<int>();
 
-		Vector2D<int> TargetCoordinates;
+		Vector2D<float> TargetCoordinates;
 		TargetCoordinates.x = signalData["targetX"].get<int>();
 		TargetCoordinates.y = signalData["targetY"].get<int>();
 
@@ -277,7 +272,7 @@ void Game::InitializeSignals(nlohmann::json Data)
 	}
 }
 
-RailwayPoint* Game::AddPoint(Vector2D<int> Coordinates, const char* Identifier, const char* Type) {
+RailwayPoint* Game::AddPoint(Vector2D<float> Coordinates, const char* Identifier, const char* Type) {
 	
 	Coordinates = TileToPixelCoordinates(Coordinates);
 	StationsCounter++;
@@ -336,9 +331,9 @@ void Game::ConnectPoints(RailwayPoint* PointA, RailwayPoint* PointB) {
 	PointA->SetNextPoint(PointB);
 
 	/*Establish a direction*/
-	Vector2D<int> CoordsA = PointA->GetPosition() / GAME_OBJECT_HEIGHT;
-	Vector2D<int> CoordsB = PointB->GetPosition() / GAME_OBJECT_HEIGHT;
-	Vector2D<int> Direction = CoordsB - CoordsA;
+	Vector2D<float> CoordsA = PointA->GetPosition() / GAME_OBJECT_HEIGHT;
+	Vector2D<float> CoordsB = PointB->GetPosition() / GAME_OBJECT_HEIGHT;
+	Vector2D<float> Direction = CoordsB - CoordsA;
 	int TrackCoordinate{};
 
 	if (Direction.x != 0) {
@@ -368,7 +363,7 @@ void Game::HandleHitsUnderCursor() {
 	/*Check for train hit*/
 	for (int i = 0; i < TrainsCounter; i++) {
 		for (int j = 0; j < NUMBER_OF_CARS; j++) {
-			DistanceToCursor = (Trains[i]->GetCar(j)->GetPosition() - Vector2D<int>{x - TILE_WIDTH / 2, y - TILE_HEIGHT / 2}).Abs();
+			DistanceToCursor = (Trains[i]->GetCar(j)->GetPosition() - Vector2D<float>{x - TILE_WIDTH / 2, y - TILE_HEIGHT / 2}).Abs();
 			if (DistanceToCursor <= TILE_HEIGHT / 2) {
 				std::cout << "Distance to cursor = " << DistanceToCursor << std::endl;
 				Trains[i]->SetIsMoving(!Trains[i]->GetIsMoving());
@@ -377,7 +372,7 @@ void Game::HandleHitsUnderCursor() {
 	}
 	/*Check for station hit and handle line swapping*/
 	for (int i = 0; i < StationsCounter; i++) {
-		if ((Stations[i]->GetPosition() - Vector2D<int>{x - TILE_WIDTH / 2, y - TILE_HEIGHT / 2}).Abs() <= TILE_HEIGHT / 2) {
+		if ((Stations[i]->GetPosition() - Vector2D<float>{x - TILE_WIDTH / 2, y - TILE_HEIGHT / 2}).Abs() <= TILE_HEIGHT / 2) {
 			for (int k = 0; k < TrainsCounter; k++) {//check if any train is at the station
 				for (int j = 0; j < NUMBER_OF_CARS; j++) {//check per car
 					if ((Trains[k]->GetCar(j)->GetPosition() - Stations[i]->GetPosition()).Abs() <= TILE_HEIGHT / 2) {
@@ -395,7 +390,7 @@ void Game::HandleHitsUnderCursor() {
 	/*Switch the Signal Lights between green and red*/
 
 	for (int i = 0; i < SignalsCounter; i++) {
-		if ((TrafficSignals[i]->GetPosition() - Vector2D<int>{x - TILE_WIDTH / 2, y - TILE_HEIGHT / 2}).Abs() <= TILE_HEIGHT / 2){
+		if ((TrafficSignals[i]->GetPosition() - Vector2D<float>{x - TILE_WIDTH / 2, y - TILE_HEIGHT / 2}).Abs() <= TILE_HEIGHT / 2){
 			TrafficSignals[i]->SetGreenLight(!TrafficSignals[i]->GetGreenLight());
 		}
 	}
@@ -422,7 +417,7 @@ RailwayPoint* Game::GetPointFromID(const char* ID) {
 	return nullptr;
 }
 
-RailwaySignal* Game::AddSignal(Vector2D<int> Position, Vector2D<int> TargetPosition, bool GreenLight)
+RailwaySignal* Game::AddSignal(Vector2D<float> Position, Vector2D<float> TargetPosition, bool GreenLight)
 {
 	SignalsCounter++;
 	Position = TileToPixelCoordinates(Position);

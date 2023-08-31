@@ -4,6 +4,11 @@ constexpr int TILE_WIDTH{ 32 };
 constexpr int TILE_HEIGHT{ 32 };
 constexpr int GAME_WINDOW_WIDTH{ 1376 };
 constexpr int GAME_WINDOW_HEIGHT{ 768 };
+constexpr int GAME_OBJECT_WIDTH{ 32 };
+constexpr int GAME_OBJECT_HEIGHT{ 32 };
+constexpr int NUMBER_OF_STATIONS{ 100 };
+constexpr int MAX_NUMBER_OF_TRAINS{ 100 };
+constexpr int MAX_NUMBER_OF_TRAFFIC_SIGNS{ 100 };
 
 template <class Type>
 struct Vector2D {
@@ -17,8 +22,8 @@ struct Vector2D {
 	double Abs() {
 		return sqrt(pow(x,2) + pow(y,2));
 	}
-	/*Returns the int type vector2d with the non zero component with absolute value of one*/
-	Vector2D<int> Normalize() {
+	/*Normalizes and returns a vector2d with the non zero component with absolute value of one*/
+	Vector2D <Type> Normalize() {
 		if (x != 0)
 			x = x / abs(x);
 		if (y != 0)
@@ -90,6 +95,14 @@ struct Vector2D {
 
 };
 
+template <class Type>
+Vector2D<int> TileToPixelCoordinates(Vector2D<Type> Coordinates ) {
+	Vector2D<int> TileCoordinates{};
+	TileCoordinates.x = int(Coordinates.x * TILE_WIDTH);
+	TileCoordinates.y = int(Coordinates.y * TILE_HEIGHT);
+	return TileCoordinates;
+}
+
 enum class TileTypes : unsigned char
 {
 	Grass,
@@ -100,7 +113,7 @@ enum class TileTypes : unsigned char
 
 };
 
-enum class GACarColor : unsigned char {
+enum class ColorType : unsigned char {
 	Blue,
 	Green,
 	Orange,
@@ -108,10 +121,3 @@ enum class GACarColor : unsigned char {
 	Empty
 };
 
-template <class Type>
-Vector2D<int> TileToPixelCoordinates(Vector2D<Type> Coordinates ) {
-	Vector2D<int> TileCoordinates{};
-	TileCoordinates.x = int(Coordinates.x * TILE_WIDTH);
-	TileCoordinates.y = int(Coordinates.y * TILE_HEIGHT);
-	return TileCoordinates;
-}

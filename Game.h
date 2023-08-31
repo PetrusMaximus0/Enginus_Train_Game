@@ -26,7 +26,7 @@ public:
 	void InitializeTrains(nlohmann::json Data);
 	void InitializeSignals(nlohmann::json Data);
 	//
-	RailwayPoint* AddPoint(Vector2D<int> Coordinates, const char* Identifier, const char* Type);
+	RailwayPoint* AddPoint(Vector2D<float> Coordinates, const char* Identifier, const char* Type);
 	void DeletePoint(RailwayPoint* Point);
 	void ConnectPoints(RailwayPoint* PointA, RailwayPoint* PointB);
 	RailwayPoint* GetPointFromID(const char* ID);
@@ -37,7 +37,7 @@ public:
 	void DeleteTrain(Train* Train);
 	bool IsTrainInStation(RailwayPoint* Station);
 	//
-	RailwaySignal* AddSignal(Vector2D<int> Position, Vector2D<int> TargetPosition, bool GreenLight);
+	RailwaySignal* AddSignal(Vector2D<float> Position, Vector2D<float> TargetPosition, bool GreenLight);
 	void DeleteSignal(RailwaySignal* Signal);
 	
 private:

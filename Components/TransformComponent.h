@@ -5,35 +5,38 @@ class TransformComponent
 
 {
 public:
-	TransformComponent(Vector2D<int> InPosition, Vector2D<int> InVelocity, float InHeading);
+	TransformComponent(Vector2D<float> InPosition, Vector2D<float> InVelocity, float InHeading);
 	~TransformComponent();
 
 private:
-	Vector2D<int> Position{ 0,0 };
-	Vector2D<int> Velocity{ 0,0 };
-	float Heading{0}; //degrees
+	Vector2D<float> Position{ 0,0 };
+	Vector2D<float> Velocity{ 0,0 };
+	//float RotationSpeed{ 0 };
+	float Heading{ 0 }; //degrees
 
 public:
 	//Updates position based on velocity.
 	void Update(float DeltaTime);
 	
 	//Sets a new Velocity.
-	void SetVelocity(Vector2D<int> NewVelocity);
+	void SetVelocity(Vector2D<float> NewVelocity);
 
 	//Set a new position
-	void SetPosition(Vector2D<int> NewPosition);
+	void SetPosition(Vector2D<float> NewPosition);
 
 	//set a new Heading
 	void SetHeading(float NewHeading);
 
 	//Get current Position
-	Vector2D<int> GetPosition();
+	Vector2D<float> GetPosition();
 
 	//Get Velocity
-	Vector2D<int> GetVelocity();
+	Vector2D<float> GetVelocity();
 
 	//Get Heading
 	float GetHeading();
 
+	//Get Whole Transform
+	TransformComponent GetTransform();
 
 };

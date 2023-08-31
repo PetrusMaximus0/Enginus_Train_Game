@@ -1,22 +1,21 @@
 #pragma once
 #include "RailwayPoint.h"
-#include <SDL.h>
 #include <iostream>
-#include "TextureManager.h"
 
-RailwayPoint::RailwayPoint(SDL_Renderer* InRenderer, Vector2D<int> InCoordinates, const char* InIdentifier, const char* InType) :
-	GameObject(InRenderer, InCoordinates)
-{	strncpy_s(Identifier, InIdentifier, sizeof(Identifier));
+RailwayPoint::RailwayPoint(SDL_Renderer* InRenderer, TransformComponent InTransform, const char* InIdentifier, const char* InType, ColorType Color) :
+	GameObject(InRenderer, InTransform)
+{	
+	/*Set the ID and the Type of Point*/
+	strncpy_s(Identifier, InIdentifier, sizeof(Identifier));
 	strncpy_s(Type, InType, sizeof(Type));
 
-	/*Set a random colored texture if the point is a station and set the waypoint texture otherwise*/
+	/*Randomize the color of the station and assign color empty if not a station*/
 	if (!strncmp("STA", Type, sizeof("STA"))) {
-		GACarColor NewColorType = (GACarColor)(rand() % 4);
+		ColorType NewColorType = (ColorType)(rand() % 4);
 		SetPointColorType(NewColorType);
 	}
 	else {
-		SetPointColorType(GACarColor::Empty);
-	
+		SetPointColorType(ColorType::Empty);
 	}
 }
 
@@ -28,7 +27,7 @@ RailwayPoint::~RailwayPoint()
 
 void RailwayPoint::SetNextPoint(RailwayPoint* NextPoint)
 {
-	if (NumberOfExits < MAX_CONNECTIONS_BETWEENPOINTS && NextPoint->NumberOfEntries < MAX_CONNECTIONS_BETWEENPOINTS) {
+	if (NumberOfExits < MAX_CONNECTIONS_BETWEEN_POINTS && NextPoint->NumberOfEntries < MAX_CONNECTIONS_BETWEEN_POINTS) {
 		NextPoints[NumberOfExits] = NextPoint;
 		NumberOfExits += 1;
 		NextPoint->NumberOfEntries += 1;
@@ -52,9 +51,9 @@ void RailwayPoint::ClearNextPoint(RailwayPoint* Point, int ID)
 	}
 }
 
-void RailwayPoint::Update()
+void RailwayPoint::Update(float DeltaTime)
 {
-	GameObject::Update();
+	GameObject::Update(DeltaTime);
 }
 
 void RailwayPoint::Render()
@@ -69,44 +68,41 @@ void RailwayPoint::Render()
 			else {
 				SDL_SetRenderDrawColor(Renderer, 255, 0, 0, 255);//RED
 			}
-			SDL_RenderDrawLine(Renderer, Coordinates.x + GAME_OBJECT_WIDTH / 2, Coordinates.y + GAME_OBJECT_HEIGHT / 2, NextPoints[i]->Coordinates.x + GAME_OBJECT_WIDTH / 2, NextPoints[i]->Coordinates.y + GAME_OBJECT_HEIGHT / 2);
+			SDL_RenderDrawLine(Renderer, TransformComp->GetPosition().x + GAME_OBJECT_WIDTH / 2, TransformComp->GetPosition().y + GAME_OBJECT_HEIGHT / 2, NextPoints[i]->TransformComp->GetPosition().x + GAME_OBJECT_WIDTH / 2, NextPoints[i]->TransformComp->GetPosition().y + GAME_OBJECT_HEIGHT / 2);
 		}
 	}
 
 }
 
-RailwayPoint* RailwayPoint::GetNextPoint(int PointID)
-{
-	return NextPoints[PointID];
-}
+RailwayPoint* RailwayPoint::GetNextPoint(int PointID) {	return NextPoints[PointID]; }
 
 Vector2D<int> RailwayPoint::GetAccessNumbers()
 {
 	return Vector2D<int>{NumberOfEntries, NumberOfExits};
 }
 
-void RailwayPoint::SetPointColorType(GACarColor NewColor)
+void RailwayPoint::SetPointColorType(ColorType NewColor)
 {
-	ColorType = NewColor;
+	StationColor = NewColor;
 	switch (NewColor) {
-		case(GACarColor::Blue):
-			SetTexture(TextureManager::LoadTexture(Renderer, "assets/art/station_blue_01.png"));
+		case(ColorType::Blue):
+			SpriteComp->SetTexture("assets/art/station_blue_01.png");
 			break;
 
-		case(GACarColor::Green):
-			SetTexture(TextureManager::LoadTexture(Renderer, "assets/art/station_green_01.png"));
+		case(ColorType::Green):
+			SpriteComp->SetTexture("assets/art/station_green_01.png");
 			break;
 
-		case(GACarColor::Orange):
-			SetTexture(TextureManager::LoadTexture(Renderer, "assets/art/station_orange_01.png"));
+		case(ColorType::Orange):
+			SpriteComp->SetTexture("assets/art/station_orange_01.png");
 			break;
 
-		case(GACarColor::Purple):
-			SetTexture(TextureManager::LoadTexture(Renderer, "assets/art/station_purple_01.png"));
+		case(ColorType::Purple):
+			SpriteComp->SetTexture("assets/art/station_purple_01.png");
 			break;
 
-		case(GACarColor::Empty):
-			SetTexture(TextureManager::LoadTexture(Renderer, "assets/art/waypoint_01.png"));
+		case(ColorType::Empty):
+			SpriteComp->SetTexture("assets/art/waypoint_01.png");
 			break;
 	}
 }
@@ -146,4 +142,4 @@ void RailwayPoint::SetTrainInStation(bool Value)
 	IsTrainInStation = Value;
 }
 
-bool RailwayPoint::GetIsTrainInStation(){	return IsTrainInStation;}
+bool RailwayPoint::GetIsTrainInStation(){return IsTrainInStation;}
