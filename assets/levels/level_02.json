@@ -2,27 +2,53 @@
   "trains": [
 
     {
-      "identifier": "AA",
+      "identifier": "CA",
       "initialStationID": "01",
       "isMoving": true,
       "maxTrips": 5
     },
 
     {
-      "identifier": "AB",
+      "identifier": "CO",
       "initialStationID": "00",
       "isMoving": true,
       "maxTrips": 5
     },
 
     {
-      "identifier": "AC",
+      "identifier": "KE",
       "initialStationID": "02",
       "isMoving": true,
       "maxTrips": 5
     },
     {
+      "identifier": "KA",
+      "initialStationID": "05",
+      "isMoving": true,
+      "maxTrips": 5
+    },
+    {
+      "identifier": "AC",
+      "initialStationID": "01",
+      "isMoving": true,
+      "maxTrips": 5
+    },
+
+    {
       "identifier": "AD",
+      "initialStationID": "00",
+      "isMoving": true,
+      "maxTrips": 5
+    },
+
+    {
+      "identifier": "AA",
+      "initialStationID": "02",
+      "isMoving": true,
+      "maxTrips": 5
+    },
+    {
+      "identifier": "AB",
       "initialStationID": "05",
       "isMoving": true,
       "maxTrips": 5
@@ -53,6 +79,7 @@
       "isMoving": true,
       "maxTrips": 5
     },
+
     {
       "identifier": "AI",
       "initialStationID": "01",
@@ -78,112 +105,10 @@
       "initialStationID": "05",
       "isMoving": true,
       "maxTrips": 5
-    },
-    {
-      "identifier": "AM",
-      "initialStationID": "01",
-      "isMoving": true,
-      "maxTrips": 5
-    },
-
-    {
-      "identifier": "AN",
-      "initialStationID": "00",
-      "isMoving": true,
-      "maxTrips": 5
-    },
-
-    {
-      "identifier": "AO",
-      "initialStationID": "02",
-      "isMoving": true,
-      "maxTrips": 5
-    },
-    {
-      "identifier": "AP",
-      "initialStationID": "05",
-      "isMoving": true,
-      "maxTrips": 5
-    },
-    {
-      "identifier": "AQ",
-      "initialStationID": "01",
-      "isMoving": true,
-      "maxTrips": 5
-    },
-
-    {
-      "identifier": "AR",
-      "initialStationID": "00",
-      "isMoving": true,
-      "maxTrips": 5
-    },
-
-    {
-      "identifier": "AS",
-      "initialStationID": "02",
-      "isMoving": true,
-      "maxTrips": 5
-    },
-    {
-      "identifier": "AT",
-      "initialStationID": "05",
-      "isMoving": true,
-      "maxTrips": 5
-    },
-    {
-      "identifier": "AU",
-      "initialStationID": "01",
-      "isMoving": true,
-      "maxTrips": 5
-    },
-
-    {
-      "identifier": "AV",
-      "initialStationID": "00",
-      "isMoving": true,
-      "maxTrips": 5
-    },
-
-    {
-      "identifier": "AX",
-      "initialStationID": "02",
-      "isMoving": true,
-      "maxTrips": 5
-    },
-    {
-      "identifier": "AY",
-      "initialStationID": "05",
-      "isMoving": true,
-      "maxTrips": 5
-    },
-    {
-      "identifier": "AZ",
-      "initialStationID": "01",
-      "isMoving": true,
-      "maxTrips": 5
-    },
-
-    {
-      "identifier": "BA",
-      "initialStationID": "00",
-      "isMoving": true,
-      "maxTrips": 5
-    },
-
-    {
-      "identifier": "BB",
-      "initialStationID": "02",
-      "isMoving": true,
-      "maxTrips": 5
-    },
-    {
-      "identifier": "BC",
-      "initialStationID": "05",
-      "isMoving": true,
-      "maxTrips": 5
     }
-],
+
+
+  ],
 
   "points": [
     {

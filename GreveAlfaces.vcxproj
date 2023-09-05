@@ -72,8 +72,8 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(ProjectDir)\SDL2_image\include;$(ProjectDir)\SDL2\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(ProjectDir)\SDL2_image\lib\x64;$(ProjectDir)\SDL2\lib\x64;$(LibraryPath)</LibraryPath>
+    <IncludePath>H:\Repos\SDL\SDL2_image\include;H:\Repos\SDL\SDL2\include;$(IncludePath)</IncludePath>
+    <LibraryPath>..\SDL\SDL2_image\lib\x64;..\SDL\SDL2\lib\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -136,6 +136,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Components\SpriteComponent.cpp" />
+    <ClCompile Include="Components\TransformComponent.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="main.cpp" />
@@ -148,6 +150,8 @@
   <ItemGroup>
     <ClInclude Include="assets\json_parser\json.hpp" />
     <ClInclude Include="assets\json_parser\json_fwd.hpp" />
+    <ClInclude Include="Components\SpriteComponent.h" />
+    <ClInclude Include="Components\TransformComponent.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="Library.h" />
@@ -158,7 +162,6 @@
     <ClInclude Include="Train.h" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="..\..\..\..\..\Projects\GreveAlfaces\resources\art\car_empty_01.png" />
     <Image Include="assets\art\car_blue_01.png" />
     <Image Include="assets\art\car_empty_01.png" />
     <Image Include="assets\art\car_green_01.png" />
@@ -185,6 +188,7 @@
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
     </None>
     <None Include="assets\levels\level_02.json" />
+    <None Include="README.md" />
     <None Include="Saved\level_01.json" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

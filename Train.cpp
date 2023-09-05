@@ -3,12 +3,13 @@
 #include "Train.h"
 #include "TextureManager.h"
 
-Train::Train(SDL_Renderer* InRenderer, bool InIsMoving, const char* InIdentifier, RailwayPoint* InitialStation, int InMaxTrips):
+Train::Train(SDL_Renderer* InRenderer, bool InIsMoving, const char* InIdentifier, RailwayPoint* InitialStation, int InMaxTrips) :
 	Renderer(InRenderer),
 	IsMoving(InIsMoving),
-	MaxTrips(InMaxTrips)
+	MaxTrips(InMaxTrips),
+	StartingStation(InitialStation)
 
-{
+{	
 	/*Create the cars and set their texture randomnly*/
 	for (int i = 0; i < NUMBER_OF_CARS; i++) {	
 		ColorType Color = (ColorType)(rand() % 4);//change 4 to number of colors
@@ -16,8 +17,10 @@ Train::Train(SDL_Renderer* InRenderer, bool InIsMoving, const char* InIdentifier
 		SetCarColorType(Color, i);
 		SetDestination(InitialStation->GetNextPoint(), i);
 	}
-	StartingStation = InitialStation;
-	TripsCompleted = 0;
+	/*need to despawn otherwise they spawn by default on their position which can conflict with other*/
+	DeSpawn();
+	//the ReSpawn is done automatically
+	
 }
 
 Train::~Train()
@@ -133,6 +136,14 @@ void Train::SetDestination(RailwayPoint* NewDestination, int CarID){
 	Destinations[CarID] = NewDestination;
 }
 
+RailwayPoint* Train::GetDestinations(int Index){
+	if(Index < NUMBER_OF_CARS+1)
+		return Destinations[Index];
+	else
+		return nullptr;
+	
+}
+
 void Train::HandleCarStationInteraction() {
 	double Distance{};
 	for (int i = 0; i < NUMBER_OF_CARS; i++) {
@@ -171,6 +182,11 @@ void Train::SetIsMoving(bool Value) { Train::IsMoving = Value; }
 
 bool Train::GetIsMoving() { return IsMoving; }
 
+void Train::Spawn()
+{
+
+}
+
 void Train::StopTrain() {
 	for (int i = 0; i < NUMBER_OF_CARS; i++) {
 		Cars[i]->GetTransformComponent()->SetVelocity(Vector2D<float>{0,0});
@@ -181,6 +197,8 @@ void Train::Respawn() {
 	
 	if (!StartingStation->GetIsTrainInStation()) {
 		for (int i = 0; i < NUMBER_OF_CARS; i++) {
+			/*locks the station*/
+			StartingStation->SetTrainInStation(true);
 			/*Resets the Position of the Cars to the initial spawn station*/
 			Cars[i]->GetTransformComponent()->SetPosition(StartingStation->GetTransformComponent()->GetPosition());
 			SetDestination(StartingStation, i);

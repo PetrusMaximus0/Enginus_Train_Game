@@ -16,10 +16,10 @@ private:
 	RailwayPoint* StartingStation{};
 	bool IsActive{true};
 	int MaxTrips{};
-	int TripsCompleted{};
-	bool WinConditon{};
-	bool WaitingForSpawn{};
-	float RemainingStopTime{};
+	int TripsCompleted{0};
+	bool WinConditon{false};
+	bool WaitingForSpawn{true};
+	float RemainingStopTime{0};
 	SDL_Renderer* Renderer{};
 
 	void StopTrain();
@@ -39,6 +39,8 @@ public:
 
 	void SetDestination(RailwayPoint* NewDestination, int CarID);
 
+	RailwayPoint* GetDestinations(int index);
+
 	void HandleCarStationInteraction();
 
 	GameObject* GetCar(int Index);
@@ -46,6 +48,8 @@ public:
 	void SetIsMoving(bool Value);
 
 	bool GetIsMoving();
+
+	void Spawn();
 
 	void Respawn();
 

@@ -3,6 +3,7 @@
 #include <SDL_image.h>
 #include <iostream>
 #include <cstdlib>
+#include "Map.h"
 #include "Library.h"
 #include "Train.h"
 #include "RailwayPoint.h"
@@ -11,7 +12,7 @@
 
 class Game{
 public:
-	Game(const char* title, int PositionX, int PositionY, int Width, int Height, bool IsFullscreen);
+	Game(const char* title, int PositionX, int PositionY, int Width, int Height, bool IsFullscreen, const int FramesPerSecond);
 	~Game();
 	void HandleEvents();
 	void Update(float DeltaTime);
@@ -33,9 +34,12 @@ public:
 	//
 	void HandleHitsUnderCursor();
 	//
-	Train* AddTrain(RailwayPoint* InitialStation, bool IsMoving, const char* Identifier, int MaxTrips);
+	void UpdateTrains(float DeltaTime);
+	Train* NewTrain(RailwayPoint* InitialStation, bool IsMoving, const char* Identifier, int MaxTrips);
 	void DeleteTrain(Train* Train);
 	bool IsTrainInStation(RailwayPoint* Station);
+	/*returns true if object 1 is colliding with object 2 and false otherwise*/
+	bool IsColliding(TransformComponent Object1Transform, TransformComponent Object2Transform);
 	//
 	RailwaySignal* NewSignal(Vector2D<float> Position, Vector2D<float> TargetPosition, bool GreenLight);
 	void DeleteSignal(RailwaySignal* Signal);
@@ -48,6 +52,11 @@ private:
 	int StationsCounter{0};
 	int TrainsCounter{0};
 	int SignalsCounter{0};
+	const int FramesPerSecond{};
 	TileTypes GameMap[GAME_WINDOW_HEIGHT / TILE_HEIGHT][GAME_WINDOW_WIDTH / TILE_WIDTH]{};
+	Map* GameWorld{};
+	RailwayPoint* Stations[NUMBER_OF_STATIONS]{};
+	Train* Trains[MAX_NUMBER_OF_TRAINS]{};
+	RailwaySignal* TrafficSignals[MAX_NUMBER_OF_TRAFFIC_SIGNS]{};
 
 };
