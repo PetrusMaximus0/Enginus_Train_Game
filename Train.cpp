@@ -90,7 +90,7 @@ void Train::Render()
 
 void Train::UpdateCars(float DeltaTime) {
 	Vector2D<float> NewCoordinates{}, NewVelocity{};
-	float Distance{}, SpeedMultiplier{ 1.f };
+	float Distance{0}, SpeedMultiplier{ 4.f };
 	TransformComponent* Transform{};
 	
 	/*Update Cars Position one by one*/
@@ -154,7 +154,7 @@ void Train::HandleCarStationInteraction() {
 				SetCarColorType(ColorType::Empty, i);
 
 				/*StopCars for a few seconds*/
-				TemporaryStop(1.5 * 200);// x multiplies by frames per second
+				TemporaryStop(1.5 * 60.f);// x multiplies by frames per second
 				
 			}
 			//set a new destination or stops the train if there isn't one

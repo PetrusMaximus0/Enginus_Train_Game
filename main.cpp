@@ -13,7 +13,7 @@ int main(int argc, char* args[]) {
 	double deltaTime = 0;
 	
 	/*FRAME RATE LIMITING*/
-	const int FramesPerSecond{ 200 };
+	const int FramesPerSecond{ 60 };
 	const int FrameDelay{ 1000 / FramesPerSecond };
 	Uint32 FrameStart{ 0 };
 	int FrameTime{ 0 };

@@ -113,7 +113,6 @@ void Game::Render()
 	/*Present everything on screen*/
 	SDL_RenderPresent(Renderer);
 }
-
 void Game::Clean()
 {
 	/*Performs cleanup of SDL before calling SDL_Quit()*/
@@ -131,7 +130,7 @@ void Game::Clean()
 	std::cout << "Game cleaning complete!" << std::endl;
 }
 bool Game::GetIsRunning(){return IsRunning;}
-
+//
 nlohmann::json Game::LoadGameData()
 {
 	/*Load game data from a json file*/
@@ -147,6 +146,7 @@ nlohmann::json Game::LoadGameData()
 	std::cout << Data.dump(4) << std::endl;
 	return Data;
 }
+//
 void Game::InitializeSDL(const char* title, int PositionX, int PositionY, int Width, int Height, bool IsFullscreen)
 {
 	/*Initialize SDL, window and renderer. Initializes the trains and stations*/
@@ -247,7 +247,7 @@ void Game::InitializeSignals(nlohmann::json Data)
 		NumSignals++;
 	}
 }
-
+//
 RailwayPoint* Game::NewPoint(Vector2D<float> Coordinates, const char* Identifier, const char* Type) {
 	
 	Coordinates = TileToPixelCoordinates(Coordinates);
@@ -255,7 +255,6 @@ RailwayPoint* Game::NewPoint(Vector2D<float> Coordinates, const char* Identifier
 	return new RailwayPoint(Renderer, TransformComponent{ Coordinates, Vector2D<float>{0,0}, 0.f }, Identifier, Type);
 
 } 
-
 void Game::DeletePoint(RailwayPoint* Point)
 {
 	/*Find every station that connects to this point and sever the connection*/
@@ -279,61 +278,6 @@ void Game::DeletePoint(RailwayPoint* Point)
 	delete(Point);
 
 }
-
-void Game::UpdateTrains(float DeltaTime)
-{
-	for (int i = 0; i < TrainsCounter; i++) {
-		for (int j = 0; j < TrainsCounter; j++) {
-			if (i != j) {
-				for (int k = 0; k < NUMBER_OF_CARS; k++) {
-					/*check for a collision between a locomotive and a car*/
-					TransformComponent* Transform1{ Trains[i]->GetCar(0)->GetTransformComponent() };
-					TransformComponent* Transform2{ Trains[j]->GetCar(k)->GetTransformComponent() };
-
-					if (IsColliding(*Transform1, *Transform2)) {
-						// if the next movements of the trains solve the collision, then we will allow movement
-						Vector2D<float>PredictedVelocity = (Trains[i]->GetDestinations(0)->GetTransformComponent()->GetPosition() - Transform1->GetPosition()).Normalize();
-						Vector2D<float>PredictedPositionNextTick = Transform1->GetPosition() + PredictedVelocity*GAME_OBJECT_WIDTH;
-	
-						if (IsColliding(TransformComponent{ PredictedPositionNextTick, Vector2D<float>{0,0}, 0.f }, *Transform2)) {
-							Trains[i]->TemporaryStop(1.5f * 200);
-							break;
-						}
-						//otherwise
-					}
-				}
-			}
-		}
-		//clean up trains marked for deletion
-		if (Trains[i]->GetIsActive())
-			Trains[i]->Update(DeltaTime);
-		else
-			DeleteTrain(Trains[i]);
-	}
-}
-
-Train* Game::NewTrain(RailwayPoint* InitialStation, bool IsMoving, const char* Identifier, int MaxTrips)
-{
-	TrainsCounter++;
-	return new Train(Renderer, IsMoving, Identifier, InitialStation, MaxTrips);
-
-}
-
-void Game::DeleteTrain(Train* Train)
-{
-	/*Swap with last element of train array*/
-	for (int j = 0; j < TrainsCounter; j++) {
-		if (Trains[j] == Train) {
-			Trains[j] = Trains[TrainsCounter - 1];
-			Trains[TrainsCounter - 1] = nullptr;
-			TrainsCounter--;
-		}
-	}
-	/*Delete the train*/
-	delete(Train);
-
-}
-
 void Game::ConnectPoints(RailwayPoint* PointA, RailwayPoint* PointB) {
 
 	PointA->SetNextPoint(PointB);
@@ -359,7 +303,13 @@ void Game::ConnectPoints(RailwayPoint* PointA, RailwayPoint* PointB) {
 	}
 
 }
-
+RailwayPoint* Game::GetPointFromID(const char* ID) {
+	for (int i = 0; i < StationsCounter; i++)
+		if (strcmp(ID, Stations[i]->GetIdentifier()) == 0)
+			return Stations[i];
+	return nullptr;
+}
+//
 void Game::HandleHitsUnderCursor() {
 	/*Get the coordinates of the click*/
 	int x, y;
@@ -406,32 +356,76 @@ void Game::HandleHitsUnderCursor() {
 
 	/*Nothing was clicked*/
 }
+//
+void Game::UpdateTrains(float DeltaTime)
+{
+	for (int i = 0; i < TrainsCounter; i++) {
+		for (int j = 0; j < TrainsCounter; j++) {
+			if (i != j) {
+				for (int k = 0; k < NUMBER_OF_CARS; k++) {
+					/*check for a collision between a locomotive and a car*/
+					TransformComponent* Transform1{ Trains[i]->GetCar(0)->GetTransformComponent() };
+					TransformComponent* Transform2{ Trains[j]->GetCar(k)->GetTransformComponent() };
 
+					if (IsColliding(*Transform1, *Transform2)) {
+						// if the next movements of the trains solve the collision, then we will allow movement
+						Vector2D<float>PredictedVelocity = (Trains[i]->GetDestinations(0)->GetTransformComponent()->GetPosition() - Transform1->GetPosition()).Normalize();
+						Vector2D<float>PredictedPositionNextTick = Transform1->GetPosition() + PredictedVelocity*GAME_OBJECT_WIDTH;
+	
+						if (IsColliding(TransformComponent{ PredictedPositionNextTick, Vector2D<float>{0,0}, 0.f }, *Transform2)) {
+							Trains[i]->TemporaryStop(1.5f * FramesPerSecond);
+							break;
+						}
+						//otherwise
+					}
+				}
+			}
+		}
+		//clean up trains marked for deletion
+		if (Trains[i]->GetIsActive())
+			Trains[i]->Update(DeltaTime);
+		else
+			DeleteTrain(Trains[i]);
+	}
+}
+Train* Game::NewTrain(RailwayPoint* InitialStation, bool IsMoving, const char* Identifier, int MaxTrips)
+{
+	TrainsCounter++;
+	return new Train(Renderer, IsMoving, Identifier, InitialStation, MaxTrips);
+
+}
+void Game::DeleteTrain(Train* Train)
+{
+	/*Swap with last element of train array*/
+	for (int j = 0; j < TrainsCounter; j++) {
+		if (Trains[j] == Train) {
+			Trains[j] = Trains[TrainsCounter - 1];
+			Trains[TrainsCounter - 1] = nullptr;
+			TrainsCounter--;
+		}
+	}
+	/*Delete the train*/
+	delete(Train);
+
+}
 bool Game::IsTrainInStation(RailwayPoint* Station) {
 		for (int j = 0; j < TrainsCounter; j++) {
 			for (int k = 0; k < NUMBER_OF_CARS; k++) {
-				if ((Station->GetTransformComponent()->GetPosition() - Trains[j]->GetCar(k)->GetTransformComponent()->GetPosition()).Abs() < GAME_OBJECT_HEIGHT+20) {
+				if ((Station->GetTransformComponent()->GetPosition() - Trains[j]->GetCar(k)->GetTransformComponent()->GetPosition()).Abs() < GAME_OBJECT_HEIGHT + 10) {
 					return true;
 				}
 			}
 		}
 		return false;
 }
-
+//
 bool Game::IsColliding(TransformComponent Object1Transform, TransformComponent Object2Transform)
 {
 	float Distance = (Object1Transform.GetPosition() - Object2Transform.GetPosition()).Abs();
 
 	return Distance < GAME_OBJECT_WIDTH+5 ? true : false;
 }
-
-RailwayPoint* Game::GetPointFromID(const char* ID) {
-	for (int i = 0; i < StationsCounter; i++)
-		if (strcmp(ID, Stations[i]->GetIdentifier()) == 0)
-			return Stations[i];
-	return nullptr;
-}
-
+//
 RailwaySignal* Game::NewSignal(Vector2D<float> Position, Vector2D<float> TargetPosition, bool GreenLight)
 {
 	SignalsCounter++;
@@ -440,7 +434,6 @@ RailwaySignal* Game::NewSignal(Vector2D<float> Position, Vector2D<float> TargetP
 
 	return new RailwaySignal(Renderer, TransformComponent{ Position, Vector2D<float>{0,0}, 0.f }, TargetPosition, GreenLight);
 }
-
 void Game::DeleteSignal(RailwaySignal* Signal) {
 	SignalsCounter--;
 	delete(Signal);
