@@ -1,4 +1,11 @@
 # Enginus - Train Game
-This is the first iteration of Enginus. 
-Enginus is a hobby game engine project with the primary goal of improving c++ knowledge.
-This iteration contains a game called Train Game.
+Enginus is a very simple 2D game made with sdl2 and c++.
+The objective of this project is to improve my knowledge of c++ and video game programming.
+
+
+# Next steps to accomplish
+-GUI system
+  -Menus
+-Level Editor
+-Game states (Win\lose conditions)
+
