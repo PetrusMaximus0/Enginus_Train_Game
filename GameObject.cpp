@@ -1,71 +1,47 @@
 #include "GameObject.h"
 #include "TextureManager.h"
 
-GameObject::GameObject(SDL_Renderer* InRenderer, Vector2D<int> InCoordinates, GACarColor InColorType) :
-	Coordinates(InCoordinates),
-	Renderer(InRenderer),
-	ColorType(InColorType)
+GameObject::GameObject(SDL_Renderer* InRenderer, TransformComponent Transform):
+	Renderer(InRenderer)
 {
+	TransformComp = new TransformComponent(Transform);//Implemented Delete
+	SpriteComp = new SpriteComponent(InRenderer);//Implemented Delete
 }
 
-GameObject::GameObject(SDL_Renderer* InRenderer, const char* TextureSheet, Vector2D<int> InCoordinates, GACarColor InColorType):
-	Coordinates(InCoordinates),
-	Renderer(InRenderer),
-	Texture(TextureManager::LoadTexture(Renderer, TextureSheet)),
-	ColorType(InColorType){}
+GameObject::GameObject(SDL_Renderer* InRenderer, const char* TextureSheet, TransformComponent Transform):
+	Renderer(InRenderer)
+{
+	TransformComp = new TransformComponent(Transform);//Implemented Delete
+	SpriteComp = new SpriteComponent(InRenderer);//Implemented Delete
+}
 
 GameObject::~GameObject()
 {
+	/* don't need to set the pointer to nullptr because 
+	it will go out of scope right after.*/
+	delete(TransformComp);
+	delete(SpriteComp);
 }
 
-void GameObject::Update()
+void GameObject::Update(float DeltaTime)
 {
 	/*Updates the state of the object, movement, etc*/
-	//coordinates on the sprite sheet to take texture from
-	SourceRectangle.x = 0;
-	SourceRectangle.y = 0;
-	SourceRectangle.w = GAME_OBJECT_WIDTH;
-	SourceRectangle.h = GAME_OBJECT_HEIGHT;
-	//Where to draw the texture?
-	DestinationRectangle.x = Coordinates.x;
-	DestinationRectangle.y = Coordinates.y;
-	//Scaling the texture, only use powers of 2 for division or multiplication
-	DestinationRectangle.w = SourceRectangle.w * 1;
-	DestinationRectangle.h = SourceRectangle.h * 1;
-
+	TransformComp->Update(DeltaTime);
 }
 
 void GameObject::Render()
-{	/*Renders the game object on screen*/
-	SDL_RenderCopyEx(Renderer, Texture, &SourceRectangle, &DestinationRectangle, Heading, NULL, SDL_FLIP_NONE);
-	
+{	
+	//coordinates on the sprite sheet to take the texture from
+	SpriteComp->SetSourceRectangle(0, 0);
+	//Sets the position of the sprite
+	SpriteComp->SetDestinationRectangle(TransformComp->GetPosition().x, TransformComp->GetPosition().y);
+	//Sets the rotation of the sprite
+	SpriteComp->SetHeading(TransformComp->GetHeading());
+	/*Renders the sprite on screen*/
+	SpriteComp->RenderSprite();
+
 }
 
-void GameObject::SetTexture(SDL_Texture* NewTexture)
-{
-	SDL_DestroyTexture(Texture);
-	Texture = NewTexture;
-}
+TransformComponent* GameObject::GetTransformComponent(){return TransformComp;}
 
-void GameObject::SetTransform(Vector2D<int> NewCoordinates, int NewHeading)
-{
-	Coordinates = NewCoordinates;
-	Heading = NewHeading;
-}
-
-void GameObject::SetTransform(Vector2D<int> NewCoordinates)
-{
-	Coordinates = NewCoordinates;
-	
-}
-
-Vector2D<int> GameObject::GetPosition(){return Coordinates;}
-
-void GameObject::SetColorType(GACarColor NewColorType)
-{
-	ColorType = NewColorType;
-}
-
-GACarColor GameObject::GetColorType() {
-	return ColorType;
-}
+SpriteComponent* GameObject::GetSpriteComponent(){return SpriteComp;}

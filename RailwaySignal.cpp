@@ -2,8 +2,8 @@
 #include "RailwaySignal.h"
 #include "TextureManager.h"
 
-RailwaySignal::RailwaySignal(SDL_Renderer* InRenderer, Vector2D<int> InCoordinates, Vector2D<int> InTargetPosition, bool InGreenLight = true): 
-	GameObject(InRenderer, InCoordinates),
+RailwaySignal::RailwaySignal(SDL_Renderer* InRenderer, TransformComponent InTransform, Vector2D<float> InTargetPosition, bool InGreenLight = true):
+	GameObject(InRenderer, InTransform),
 	GreenLight(InGreenLight),
 	TargetPosition(InTargetPosition)
 {
@@ -15,8 +15,8 @@ RailwaySignal::~RailwaySignal()
 
 }
 
-void RailwaySignal::Update() {
-	GameObject::Update();
+void RailwaySignal::Update(float DeltaTime) {
+	GameObject::Update(DeltaTime);
 }
 
 void RailwaySignal::Render() {
@@ -27,13 +27,13 @@ void RailwaySignal::Render() {
 void RailwaySignal::SetGreenLight(bool Value = true) {
 	GreenLight = Value;
 	if (Value) {
-		SetTexture(TextureManager::LoadTexture(Renderer, "assets/art/railway_light_green.png"));
+		SpriteComp->SetTexture("assets/art/railway_light_green.png");
 	}
 	else {
-		SetTexture(TextureManager::LoadTexture(Renderer, "assets/art/railway_light_red.png"));
+		SpriteComp->SetTexture("assets/art/railway_light_red.png");
 	}
 }
 
 bool RailwaySignal::GetGreenLight() {return GreenLight;}
 
-Vector2D<int> RailwaySignal::GetTargetPosition() { return TargetPosition; }
+Vector2D<float> RailwaySignal::GetTargetPosition() { return TargetPosition; }

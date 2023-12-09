@@ -26,6 +26,85 @@
       "initialStationID": "05",
       "isMoving": true,
       "maxTrips": 5
+    },
+    {
+      "identifier": "AC",
+      "initialStationID": "01",
+      "isMoving": true,
+      "maxTrips": 5
+    },
+
+    {
+      "identifier": "AD",
+      "initialStationID": "00",
+      "isMoving": true,
+      "maxTrips": 5
+    },
+
+    {
+      "identifier": "AA",
+      "initialStationID": "02",
+      "isMoving": true,
+      "maxTrips": 5
+    },
+    {
+      "identifier": "AB",
+      "initialStationID": "05",
+      "isMoving": true,
+      "maxTrips": 5
+    },
+    {
+      "identifier": "AE",
+      "initialStationID": "01",
+      "isMoving": true,
+      "maxTrips": 5
+    },
+
+    {
+      "identifier": "AF",
+      "initialStationID": "00",
+      "isMoving": true,
+      "maxTrips": 5
+    },
+
+    {
+      "identifier": "AG",
+      "initialStationID": "02",
+      "isMoving": true,
+      "maxTrips": 5
+    },
+    {
+      "identifier": "AH",
+      "initialStationID": "05",
+      "isMoving": true,
+      "maxTrips": 5
+    },
+
+    {
+      "identifier": "AI",
+      "initialStationID": "01",
+      "isMoving": true,
+      "maxTrips": 5
+    },
+
+    {
+      "identifier": "AJ",
+      "initialStationID": "00",
+      "isMoving": true,
+      "maxTrips": 5
+    },
+
+    {
+      "identifier": "AK",
+      "initialStationID": "02",
+      "isMoving": true,
+      "maxTrips": 5
+    },
+    {
+      "identifier": "AL",
+      "initialStationID": "05",
+      "isMoving": true,
+      "maxTrips": 5
     }
 
 

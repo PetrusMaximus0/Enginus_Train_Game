@@ -2,24 +2,25 @@
 
 #include "Train.h"
 #include "TextureManager.h"
-#include <SDL.h>
-#include <SDL_image.h>
 
-Train::Train(SDL_Renderer* InRenderer, bool InIsMoving, const char* InIdentifier, RailwayPoint* InitialStation, int InMaxTrips):
+Train::Train(SDL_Renderer* InRenderer, bool InIsMoving, const char* InIdentifier, RailwayPoint* InitialStation, int InMaxTrips) :
 	Renderer(InRenderer),
 	IsMoving(InIsMoving),
-	MaxTrips(InMaxTrips)
+	MaxTrips(InMaxTrips),
+	StartingStation(InitialStation)
 
-{
+{	
 	/*Create the cars and set their texture randomnly*/
 	for (int i = 0; i < NUMBER_OF_CARS; i++) {	
-		GACarColor Color = (GACarColor)(rand() % 4);//change 4 to number of colors
-		Cars[i] = new GameObject(Renderer, InitialStation->GetPosition(), Color);
+		ColorType Color = (ColorType)(rand() % 4);//change 4 to number of colors
+		Cars[i] = new GameObject(Renderer, InitialStation->GetTransformComponent()->GetTransform());
 		SetCarColorType(Color, i);
 		SetDestination(InitialStation->GetNextPoint(), i);
 	}
-	StartingStation = InitialStation;
-	TripsCompleted = 0;
+	/*need to despawn otherwise they spawn by default on their position which can conflict with other*/
+	DeSpawn();
+	//the ReSpawn is done automatically
+	
 }
 
 Train::~Train()
@@ -28,35 +29,34 @@ Train::~Train()
 		delete(Cars[i]);
 }
 
-void Train::SetCarColorType(GACarColor NewColor, int CarID)
+void Train::SetCarColorType(ColorType NewColor, int CarID)
 {
-	Cars[CarID]->SetColorType(NewColor);
+	CarColorType[CarID] = NewColor;
 
 	switch (NewColor) {
-	case(GACarColor::Blue):
-		Cars[CarID]->SetTexture(TextureManager::LoadTexture(Renderer, "assets/art/car_blue_01.png"));
+	case(ColorType::Blue):
+		Cars[CarID]->GetSpriteComponent()->SetTexture("assets/art/car_blue_01.png");
 		break;
 
-	case(GACarColor::Green):
-
-		Cars[CarID]->SetTexture(TextureManager::LoadTexture(Renderer, "assets/art/car_green_01.png"));
+	case(ColorType::Green):
+		Cars[CarID]->GetSpriteComponent()->SetTexture("assets/art/car_green_01.png");
 		break;
 
-	case(GACarColor::Orange):
-		Cars[CarID]->SetTexture(TextureManager::LoadTexture(Renderer, "assets/art/car_orange_01.png"));
+	case(ColorType::Orange):
+		Cars[CarID]->GetSpriteComponent()->SetTexture("assets/art/car_orange_01.png");
 		break;
 
-	case(GACarColor::Purple):
-		Cars[CarID]->SetTexture(TextureManager::LoadTexture(Renderer, "assets/art/car_purple_01.png"));
+	case(ColorType::Purple):
+		Cars[CarID]->GetSpriteComponent()->SetTexture("assets/art/car_purple_01.png");
 		break;
 
-	case(GACarColor::Empty):
-		Cars[CarID]->SetTexture(TextureManager::LoadTexture(Renderer, "assets/art/car_empty_01.png"));
+	case(ColorType::Empty):
+		Cars[CarID]->GetSpriteComponent()->SetTexture("assets/art/car_empty_01.png");
 		break;
 	}
 }
 
-void Train::Update()
+void Train::Update(float DeltaTime)
 {
 	/*Verify possible Collisions*/
 	//TBA
@@ -65,7 +65,7 @@ void Train::Update()
 		if (IsMoving && Destinations[0] != nullptr && RemainingStopTime == 0) {//need a check for this next point otherwise can cause access to nullptr
 			HandleCarStationInteraction();// Handle car - station Interactions
 			CheckWinCondition();
-			UpdateCars();
+			UpdateCars(DeltaTime);
 		}
 		else if (RemainingStopTime > 0) {
 			RemainingStopTime--;
@@ -88,28 +88,46 @@ void Train::Render()
 			Cars[i]->Render();
 } 
 
-void Train::UpdateCars() {
-	Vector2D<int> NewCoordinates{};
+void Train::UpdateCars(float DeltaTime) {
+	Vector2D<float> NewCoordinates{}, NewVelocity{};
+	float Distance{0}, SpeedMultiplier{ 4.f };
+	TransformComponent* Transform{};
 	
 	/*Update Cars Position one by one*/
 	for (int i = 1; i < NUMBER_OF_CARS; i++) {
 		/*Find the correct Velocities*/
-		Velocity[i] = (Destinations[i]->GetPosition() - Cars[i]->GetPosition()).Normalize();
+		Transform = Cars[i]->GetTransformComponent();
+		
 		/*If The distance to the car in front is equal to the speed then the cars should move*/
-		int Distance = (Cars[i - 1]->GetPosition() - Cars[i]->GetPosition()).ManhatanAbs();
-		if (Distance >= GAME_OBJECT_WIDTH)
-			Cars[i]->SetTransform(Cars[i]->GetPosition() + Velocity[i]);
-		Cars[i]->Update();
-	}
-	//Update the locomotive Position
-	Velocity[0] = (Destinations[0]->GetPosition() - Cars[0]->GetPosition()).Normalize();
-	/*If the locomotive hasnt reached the destination*/
-	if ((Destinations[0]->GetPosition() - Cars[0]->GetPosition()).ManhatanAbs() > 0) {
-		NewCoordinates = Cars[0]->GetPosition() + Velocity[0];// keep it moving
-		Cars[0]->SetTransform(NewCoordinates);
+		Distance = (Cars[i - 1]->GetTransformComponent()->GetPosition() - Transform->GetPosition()).ManhatanAbs();
+		if (Distance >= GAME_OBJECT_WIDTH) {
+			NewVelocity = Destinations[i]->GetTransformComponent()->GetPosition() - Transform->GetPosition();
+			NewVelocity = NewVelocity.Normalize() * SpeedMultiplier;
+			Transform->SetVelocity(NewVelocity);
+
+		}
+		else{
+			Transform->SetVelocity(Vector2D<float>{0,0});
+
+		}		
+		Cars[i]->Update(DeltaTime);
 
 	}
-	Cars[0]->Update();
+	//Update the locomotive Position
+	Transform = Cars[0]->GetTransformComponent();
+	/*If the locomotive hasnt reached the destination*/
+	Distance = (Destinations[0]->GetTransformComponent()->GetPosition() - Transform->GetPosition()).ManhatanAbs();
+	if (Distance > 0) {
+		NewVelocity = Destinations[0]->GetTransformComponent()->GetPosition() - Transform->GetPosition();
+		NewVelocity = NewVelocity.Normalize() * SpeedMultiplier;
+		Transform->SetVelocity(NewVelocity);
+
+	}
+	else {
+		Transform->SetVelocity(Vector2D<float>{0, 0});
+
+	}
+	Cars[0]->Update(DeltaTime);
 
 
 }
@@ -118,17 +136,25 @@ void Train::SetDestination(RailwayPoint* NewDestination, int CarID){
 	Destinations[CarID] = NewDestination;
 }
 
+RailwayPoint* Train::GetDestinations(int Index){
+	if(Index < NUMBER_OF_CARS+1)
+		return Destinations[Index];
+	else
+		return nullptr;
+	
+}
+
 void Train::HandleCarStationInteraction() {
 	double Distance{};
 	for (int i = 0; i < NUMBER_OF_CARS; i++) {
-		Distance = (Destinations[i]->GetPosition() - Cars[i]->GetPosition()).Abs();
+		Distance = (Destinations[i]->GetTransformComponent()->GetPosition() - Cars[i]->GetTransformComponent()->GetPosition()).Abs();
 		if ((int)Distance == 0) {
-			if (Cars[i]->GetColorType() != GACarColor::Empty && Cars[i]->GetColorType() == Destinations[i]->GetColorType()) {
+			if (CarColorType[i] != ColorType::Empty && CarColorType[i] == Destinations[i]->GetColorType()) {
 				/*Empty the car*/
-				SetCarColorType(GACarColor::Empty, i);
+				SetCarColorType(ColorType::Empty, i);
 
 				/*StopCars for a few seconds*/
-				TemporaryStop(1.5 * 200);// x multiplies by frames per second
+				TemporaryStop(1.5 * 60.f);// x multiplies by frames per second
 				
 			}
 			//set a new destination or stops the train if there isn't one
@@ -156,9 +182,14 @@ void Train::SetIsMoving(bool Value) { Train::IsMoving = Value; }
 
 bool Train::GetIsMoving() { return IsMoving; }
 
+void Train::Spawn()
+{
+
+}
+
 void Train::StopTrain() {
 	for (int i = 0; i < NUMBER_OF_CARS; i++) {
-		Velocity[i] = Vector2D<int>{ 0,0 };
+		Cars[i]->GetTransformComponent()->SetVelocity(Vector2D<float>{0,0});
 	}
 }
 
@@ -166,12 +197,14 @@ void Train::Respawn() {
 	
 	if (!StartingStation->GetIsTrainInStation()) {
 		for (int i = 0; i < NUMBER_OF_CARS; i++) {
+			/*locks the station*/
+			StartingStation->SetTrainInStation(true);
 			/*Resets the Position of the Cars to the initial spawn station*/
-			Cars[i]->SetTransform(StartingStation->GetPosition());
+			Cars[i]->GetTransformComponent()->SetPosition(StartingStation->GetTransformComponent()->GetPosition());
 			SetDestination(StartingStation, i);
 			/*Changes the remaining colored cars's colors, so as to facilitate winning the game when there are no identical colored stations*/
-			if (Cars[i]->GetColorType() != GACarColor::Empty)
-				SetCarColorType((GACarColor)(rand() % 4),i);
+			if (CarColorType[i] != ColorType::Empty)
+				SetCarColorType((ColorType)(rand() % 4),i);
 		}
 		WaitingForSpawn = false;
 		IsMoving = true;
@@ -190,7 +223,7 @@ bool Train::GetIsActive() { return IsActive;}
 void Train::CheckWinCondition() {
 	int  k = 0;
 	while (k < NUMBER_OF_CARS) {
-		if (Cars[k]->GetColorType() != GACarColor::Empty)
+		if (CarColorType[k] != ColorType::Empty)
 			break;
 		k++;
 	}
@@ -200,7 +233,7 @@ void Train::CheckWinCondition() {
 
 void Train::DeSpawn() {
 	for (int i = 0; i < NUMBER_OF_CARS; i++)
-		Cars[i]->SetTransform(Vector2D<int>{2000, 0});//send off screen
+		Cars[i]->GetTransformComponent()->SetPosition(Vector2D<float>{2000, 0});//send off screen
 	WaitingForSpawn = true;
 	IsMoving = false;
 

@@ -1,23 +1,11 @@
 #pragma once
 #include "Game.h"
 #include "GameObject.h"
-#include "Map.h"
-
 #include <fstream>
 
-constexpr int NUMBER_OF_STATIONS{ 100 };
-constexpr int MAX_NUMBER_OF_TRAINS{ 100 };
-constexpr int MAX_NUMBER_OF_TRAFFIC_SIGNS{ 100 };
-
-// 
-//TEMPORARY GLOBALS
-
-Map* GameWorld{};
-RailwayPoint* Stations[NUMBER_OF_STATIONS]{};
-Train* Trains[MAX_NUMBER_OF_TRAINS]{};
-RailwaySignal* TrafficSignals[MAX_NUMBER_OF_TRAFFIC_SIGNS]{};
-
-Game::Game(const char* title, int PositionX, int PositionY, int Width, int Height, bool IsFullscreen) {
+Game::Game(const char* title, int PositionX, int PositionY, int Width, int Height, bool IsFullscreen, const int InFramesPerSecond):
+	FramesPerSecond(InFramesPerSecond)
+{
 	/*Default constructor for class Game*/
 	IsRunning = false;
 
@@ -37,7 +25,6 @@ Game::Game(const char* title, int PositionX, int PositionY, int Width, int Heigh
 
 	GameWorld = new Map(Renderer);
 }
-
 Game::~Game() {
 	/*Default destructor for class Game*/
 }
@@ -69,8 +56,7 @@ void Game::HandleEvents(){
 		}
 	}
 }
-
-void Game::Update()
+void Game::Update(float DeltaTime)
 {
 	/*Updates the game state with new information */
 	UpdateCounter++;
@@ -78,42 +64,25 @@ void Game::Update()
 /*Update Stations*/
 	for (int i = 0; i < StationsCounter; i++) {
 		Stations[i]->SetTrainInStation(IsTrainInStation(Stations[i]));
-		Stations[i]->Update();
+		Stations[i]->Update(DeltaTime);
 	}
 /*Update Trains*/
-	//check for collisions between trains
-	for (int i = 0; i < TrainsCounter; i++){
-		for (int j = 0; j < TrainsCounter; j++) {
-			if (i != j) {
-				for (int k = 0; k < NUMBER_OF_CARS; k++)
-					if ((Trains[i]->GetCar(0)->GetPosition() - Trains[j]->GetCar(k)->GetPosition()).Abs() <= GAME_OBJECT_WIDTH) {
-						Trains[i]->TemporaryStop(1.5f*200);
-						break;
-					}
-			}	
-		}
-		//clean up trains marked for deletion
-		if (Trains[i]->GetIsActive())
-			Trains[i]->Update();
-		else
-			DeleteTrain(Trains[i]);
-	}
+	UpdateTrains(DeltaTime);
 /*Update Traffic Lights*/
 
 	//check for collisions between traffic signs and trains and update
 	for (int i = 0; i < SignalsCounter; i++) {
 		if (!TrafficSignals[i]->GetGreenLight()) {
 			for (int j = 0; j < TrainsCounter; j++) {
-				if ((TrafficSignals[i]->GetTargetPosition() - Trains[j]->GetCar(0)->GetPosition()).Abs() < TILE_HEIGHT) {
+				if ((TrafficSignals[i]->GetTargetPosition() - Trains[j]->GetCar(0)->GetTransformComponent()->GetPosition()).Abs() < TILE_HEIGHT) {
 					Trains[j]->TemporaryStop(1.5f*200);
 				}
 			}
 		}
-		TrafficSignals[i]->Update();
+		TrafficSignals[i]->Update(DeltaTime);
 		
 	}
 }
-
 void Game::Render()
 {
 	/*Renders the game elements with the SDL library */
@@ -144,7 +113,6 @@ void Game::Render()
 	/*Present everything on screen*/
 	SDL_RenderPresent(Renderer);
 }
-
 void Game::Clean()
 {
 	/*Performs cleanup of SDL before calling SDL_Quit()*/
@@ -161,9 +129,8 @@ void Game::Clean()
 	std::cout << "Cleared Map\n";
 	std::cout << "Game cleaning complete!" << std::endl;
 }
-
 bool Game::GetIsRunning(){return IsRunning;}
-
+//
 nlohmann::json Game::LoadGameData()
 {
 	/*Load game data from a json file*/
@@ -179,7 +146,7 @@ nlohmann::json Game::LoadGameData()
 	std::cout << Data.dump(4) << std::endl;
 	return Data;
 }
-
+//
 void Game::InitializeSDL(const char* title, int PositionX, int PositionY, int Width, int Height, bool IsFullscreen)
 {
 	/*Initialize SDL, window and renderer. Initializes the trains and stations*/
@@ -218,12 +185,14 @@ void Game::InitializePoints(nlohmann::json Data)
 			IsRunning = false;
 			break;
 		}
-		Vector2D<int> Coordinates;
-		Coordinates.x = pointData["x"].get<int>();
-		Coordinates.y = pointData["y"].get<int>();
+		Vector2D<float> Coordinates{};
+		Coordinates.x = pointData["x"].get<float>();
+		Coordinates.y = pointData["y"].get<float>();
 		std::string Identifier{ pointData["identifier"].get<std::string>() };
 		std::string  PointType{ pointData["pointType"].get<std::string>() };
-		Stations[NumPoints] = Game::AddPoint(Coordinates, Identifier.c_str(), PointType.c_str());
+
+
+		Stations[NumPoints] = Game::NewPoint(Coordinates, Identifier.c_str(), PointType.c_str());
 		NumPoints++;
 	}
 
@@ -255,7 +224,7 @@ void Game::InitializeTrains(nlohmann::json Data) {
 		std::string Identifier = trainData["identifier"].get<std::string>();
 		std::string InitialStationID = trainData["initialStationID"].get<std::string>();
 		int MaxTrips = trainData["maxTrips"];
-		Trains[NumTrains] = Game::AddTrain(GetPointFromID(InitialStationID.c_str()), ShoulMove, Identifier.c_str(), MaxTrips);
+		Trains[NumTrains] = Game::NewTrain(GetPointFromID(InitialStationID.c_str()), ShoulMove, Identifier.c_str(), MaxTrips);
 		NumTrains++;
 	}
 }
@@ -266,27 +235,26 @@ void Game::InitializeSignals(nlohmann::json Data)
 	for (const auto& signalData : Data["signals"]) {
 		bool GreenLight = signalData["greenLight"];
 
-		Vector2D<int> Coordinates;
+		Vector2D<float> Coordinates;
 		Coordinates.x = signalData["positionX"].get<int>();
 		Coordinates.y = signalData["positionY"].get<int>();
 
-		Vector2D<int> TargetCoordinates;
+		Vector2D<float> TargetCoordinates;
 		TargetCoordinates.x = signalData["targetX"].get<int>();
 		TargetCoordinates.y = signalData["targetY"].get<int>();
 
-		TrafficSignals[NumSignals] = Game::AddSignal(Coordinates, TargetCoordinates, GreenLight);
+		TrafficSignals[NumSignals] = Game::NewSignal(Coordinates, TargetCoordinates, GreenLight);
 		NumSignals++;
 	}
 }
-
-RailwayPoint* Game::AddPoint(Vector2D<int> Coordinates, const char* Identifier, const char* Type) {
+//
+RailwayPoint* Game::NewPoint(Vector2D<float> Coordinates, const char* Identifier, const char* Type) {
 	
 	Coordinates = TileToPixelCoordinates(Coordinates);
 	StationsCounter++;
-	return new RailwayPoint(Renderer, Coordinates, Identifier, Type);
+	return new RailwayPoint(Renderer, TransformComponent{ Coordinates, Vector2D<float>{0,0}, 0.f }, Identifier, Type);
 
-}
-
+} 
 void Game::DeletePoint(RailwayPoint* Point)
 {
 	/*Find every station that connects to this point and sever the connection*/
@@ -310,55 +278,38 @@ void Game::DeletePoint(RailwayPoint* Point)
 	delete(Point);
 
 }
-
-Train* Game::AddTrain(RailwayPoint* InitialStation, bool IsMoving, const char* Identifier, int MaxTrips)
-{
-	TrainsCounter++;
-	return new Train(Renderer, IsMoving, Identifier, InitialStation, MaxTrips);
-
-}
-
-void Game::DeleteTrain(Train* Train)
-{
-	/*Swap with last element of train array*/
-	for (int j = 0; j < TrainsCounter; j++) {
-		if (Trains[j] == Train) {
-			Trains[j] = Trains[TrainsCounter - 1];
-			Trains[TrainsCounter - 1] = nullptr;
-			TrainsCounter--;
-		}
-	}
-	/*Delete the train*/
-	delete(Train);
-
-}
-
 void Game::ConnectPoints(RailwayPoint* PointA, RailwayPoint* PointB) {
 
 	PointA->SetNextPoint(PointB);
 
 	/*Establish a direction*/
-	Vector2D<int> CoordsA = PointA->GetPosition() / GAME_OBJECT_HEIGHT;
-	Vector2D<int> CoordsB = PointB->GetPosition() / GAME_OBJECT_HEIGHT;
-	Vector2D<int> Direction = CoordsB - CoordsA;
+	Vector2D<float> CoordsA = PointA->GetTransformComponent()->GetPosition() / GAME_OBJECT_HEIGHT;
+	Vector2D<float> CoordsB = PointB->GetTransformComponent()->GetPosition() / GAME_OBJECT_HEIGHT;
+	Vector2D<float> Direction = CoordsB - CoordsA;
 	int TrackCoordinate{};
 
 	if (Direction.x != 0) {
 		for (int i = 1; i < abs(Direction.x); i++) {
 			TrackCoordinate = CoordsA.x + Direction.x / abs(Direction.x) * i;
-			GameMap[CoordsA.y][TrackCoordinate] = TileTypes::TrackVertical;
+			GameMap[(int)CoordsA.y][TrackCoordinate] = TileTypes::TrackVertical;
 
 		}
 	}
 	else if (Direction.y != 0) {
 		for (int i = 1; i < abs(Direction.y); i++) {
 			TrackCoordinate = CoordsA.y + Direction.y / abs(Direction.y) * i;
-			GameMap[TrackCoordinate][CoordsA.x] = TileTypes::TrackHorizontal;
+			GameMap[TrackCoordinate][(int)CoordsA.x] = TileTypes::TrackHorizontal;
 		}
 	}
 
 }
-
+RailwayPoint* Game::GetPointFromID(const char* ID) {
+	for (int i = 0; i < StationsCounter; i++)
+		if (strcmp(ID, Stations[i]->GetIdentifier()) == 0)
+			return Stations[i];
+	return nullptr;
+}
+//
 void Game::HandleHitsUnderCursor() {
 	/*Get the coordinates of the click*/
 	int x, y;
@@ -370,7 +321,7 @@ void Game::HandleHitsUnderCursor() {
 	/*Check for train hit*/
 	for (int i = 0; i < TrainsCounter; i++) {
 		for (int j = 0; j < NUMBER_OF_CARS; j++) {
-			DistanceToCursor = (Trains[i]->GetCar(j)->GetPosition() - Vector2D<int>{x - TILE_WIDTH / 2, y - TILE_HEIGHT / 2}).Abs();
+			DistanceToCursor = (Trains[i]->GetCar(j)->GetTransformComponent()->GetPosition() - Vector2D<float>{ float(x - TILE_WIDTH / 2), float( y - TILE_HEIGHT / 2) }).Abs();
 			if (DistanceToCursor <= TILE_HEIGHT / 2) {
 				std::cout << "Distance to cursor = " << DistanceToCursor << std::endl;
 				Trains[i]->SetIsMoving(!Trains[i]->GetIsMoving());
@@ -379,10 +330,10 @@ void Game::HandleHitsUnderCursor() {
 	}
 	/*Check for station hit and handle line swapping*/
 	for (int i = 0; i < StationsCounter; i++) {
-		if ((Stations[i]->GetPosition() - Vector2D<int>{x - TILE_WIDTH / 2, y - TILE_HEIGHT / 2}).Abs() <= TILE_HEIGHT / 2) {
+		if ((Stations[i]->GetTransformComponent()->GetPosition() - Vector2D<float>{float(x - TILE_WIDTH / 2), float(y - TILE_HEIGHT / 2)}).Abs() <= TILE_HEIGHT / 2) {
 			for (int k = 0; k < TrainsCounter; k++) {//check if any train is at the station
 				for (int j = 0; j < NUMBER_OF_CARS; j++) {//check per car
-					if ((Trains[k]->GetCar(j)->GetPosition() - Stations[i]->GetPosition()).Abs() <= TILE_HEIGHT / 2) {
+					if ((Trains[k]->GetCar(j)->GetTransformComponent()->GetPosition() - Stations[i]->GetTransformComponent()->GetPosition()).Abs() <= TILE_HEIGHT / 2) {
 						CanSwapLine = false;// if there is a car at the station we must not swap lines
 					}
 				}
@@ -397,7 +348,7 @@ void Game::HandleHitsUnderCursor() {
 	/*Switch the Signal Lights between green and red*/
 
 	for (int i = 0; i < SignalsCounter; i++) {
-		if ((TrafficSignals[i]->GetPosition() - Vector2D<int>{x - TILE_WIDTH / 2, y - TILE_HEIGHT / 2}).Abs() <= TILE_HEIGHT / 2){
+		if ((TrafficSignals[i]->GetTransformComponent()->GetPosition() - Vector2D<float>{float(x - TILE_WIDTH / 2), float(y - TILE_HEIGHT / 2) } ).Abs() <= TILE_HEIGHT / 2){
 			TrafficSignals[i]->SetGreenLight(!TrafficSignals[i]->GetGreenLight());
 		}
 	}
@@ -405,34 +356,84 @@ void Game::HandleHitsUnderCursor() {
 
 	/*Nothing was clicked*/
 }
+//
+void Game::UpdateTrains(float DeltaTime)
+{
+	for (int i = 0; i < TrainsCounter; i++) {
+		for (int j = 0; j < TrainsCounter; j++) {
+			if (i != j) {
+				for (int k = 0; k < NUMBER_OF_CARS; k++) {
+					/*check for a collision between a locomotive and a car*/
+					TransformComponent* Transform1{ Trains[i]->GetCar(0)->GetTransformComponent() };
+					TransformComponent* Transform2{ Trains[j]->GetCar(k)->GetTransformComponent() };
 
+					if (IsColliding(*Transform1, *Transform2)) {
+						// if the next movements of the trains solve the collision, then we will allow movement
+						Vector2D<float>PredictedVelocity = (Trains[i]->GetDestinations(0)->GetTransformComponent()->GetPosition() - Transform1->GetPosition()).Normalize();
+						Vector2D<float>PredictedPositionNextTick = Transform1->GetPosition() + PredictedVelocity*GAME_OBJECT_WIDTH;
+	
+						if (IsColliding(TransformComponent{ PredictedPositionNextTick, Vector2D<float>{0,0}, 0.f }, *Transform2)) {
+							Trains[i]->TemporaryStop(1.5f * FramesPerSecond);
+							break;
+						}
+						//otherwise
+					}
+				}
+			}
+		}
+		//clean up trains marked for deletion
+		if (Trains[i]->GetIsActive())
+			Trains[i]->Update(DeltaTime);
+		else
+			DeleteTrain(Trains[i]);
+	}
+}
+Train* Game::NewTrain(RailwayPoint* InitialStation, bool IsMoving, const char* Identifier, int MaxTrips)
+{
+	TrainsCounter++;
+	return new Train(Renderer, IsMoving, Identifier, InitialStation, MaxTrips);
+
+}
+void Game::DeleteTrain(Train* Train)
+{
+	/*Swap with last element of train array*/
+	for (int j = 0; j < TrainsCounter; j++) {
+		if (Trains[j] == Train) {
+			Trains[j] = Trains[TrainsCounter - 1];
+			Trains[TrainsCounter - 1] = nullptr;
+			TrainsCounter--;
+		}
+	}
+	/*Delete the train*/
+	delete(Train);
+
+}
 bool Game::IsTrainInStation(RailwayPoint* Station) {
 		for (int j = 0; j < TrainsCounter; j++) {
 			for (int k = 0; k < NUMBER_OF_CARS; k++) {
-				if ((Station->GetPosition() - Trains[j]->GetCar(k)->GetPosition()).Abs() < GAME_OBJECT_HEIGHT) {
+				if ((Station->GetTransformComponent()->GetPosition() - Trains[j]->GetCar(k)->GetTransformComponent()->GetPosition()).Abs() < GAME_OBJECT_HEIGHT + 10) {
 					return true;
 				}
 			}
 		}
 		return false;
 }
+//
+bool Game::IsColliding(TransformComponent Object1Transform, TransformComponent Object2Transform)
+{
+	float Distance = (Object1Transform.GetPosition() - Object2Transform.GetPosition()).Abs();
 
-RailwayPoint* Game::GetPointFromID(const char* ID) {
-	for (int i = 0; i < StationsCounter; i++)
-		if (strcmp(ID, Stations[i]->GetIdentifier()) == 0)
-			return Stations[i];
-	return nullptr;
+	return Distance < GAME_OBJECT_WIDTH+5 ? true : false;
 }
-
-RailwaySignal* Game::AddSignal(Vector2D<int> Position, Vector2D<int> TargetPosition, bool GreenLight)
+//
+RailwaySignal* Game::NewSignal(Vector2D<float> Position, Vector2D<float> TargetPosition, bool GreenLight)
 {
 	SignalsCounter++;
 	Position = TileToPixelCoordinates(Position);
 	TargetPosition = TileToPixelCoordinates(TargetPosition);
 
-	return new RailwaySignal(Renderer, Position, TargetPosition, GreenLight);
+	return new RailwaySignal(Renderer, TransformComponent{ Position, Vector2D<float>{0,0}, 0.f }, TargetPosition, GreenLight);
 }
-
 void Game::DeleteSignal(RailwaySignal* Signal) {
 	SignalsCounter--;
 	delete(Signal);
