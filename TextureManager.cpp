@@ -12,11 +12,6 @@ SDL_Texture* TextureManager::LoadTexture(SDL_Renderer* Renderer, const char* Fil
     return TempTexture;
 }
 
-void TextureManager::Draw(SDL_Renderer* Renderer, SDL_Texture* Texture, SDL_Rect Source, SDL_Rect Destination)
-{
-    SDL_RenderCopyEx(Renderer, Texture, &Source, &Destination, 0, NULL, SDL_FLIP_NONE);
-}
-
 void TextureManager::Draw(SDL_Renderer* Renderer, SDL_Texture* Texture, SDL_Rect Source, SDL_Rect Destination, double Heading)
 {
     SDL_RenderCopyEx(Renderer, Texture, &Source, &Destination, Heading, NULL, SDL_FLIP_NONE);
