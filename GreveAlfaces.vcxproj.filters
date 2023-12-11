@@ -39,6 +39,12 @@
     <ClCompile Include="RailwaySignal.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Components\SpriteComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Components\TransformComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -71,11 +77,14 @@
     <ClInclude Include="RailwaySignal.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Components\SpriteComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\TransformComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="..\..\..\..\..\Projects\GreveAlfaces\resources\art\car_empty_01.png">
-      <Filter>Resource Files</Filter>
-    </Image>
     <Image Include="assets\art\car_blue_01.png">
       <Filter>Resource Files</Filter>
     </Image>
@@ -139,5 +148,6 @@
     <None Include="assets\levels\level_01.json" />
     <None Include="assets\levels\level_00.json" />
     <None Include="assets\levels\level_02.json" />
+    <None Include="README.md" />
   </ItemGroup>
 </Project>

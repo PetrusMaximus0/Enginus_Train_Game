@@ -13,7 +13,6 @@ SpriteComponent::~SpriteComponent()
 void SpriteComponent::SetTexture(const char* TexturePath)
 {
 	Texture = TextureManager::LoadTexture(Renderer, TexturePath);
-
 }
 
 void SpriteComponent::SetSourceRectangle(int X, int Y, int W, int H)
@@ -42,5 +41,3 @@ void SpriteComponent::SetHeading(float Value)
 {
 	Heading = Value;
 }
-
-

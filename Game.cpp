@@ -61,15 +61,15 @@ void Game::Update(float DeltaTime)
 	/*Updates the game state with new information */
 	UpdateCounter++;
 
-/*Update Stations*/
+	/*Update Stations*/
 	for (int i = 0; i < StationsCounter; i++) {
 		Stations[i]->SetTrainInStation(IsTrainInStation(Stations[i]));
 		Stations[i]->Update(DeltaTime);
 	}
-/*Update Trains*/
+	/*Update Trains*/
 	UpdateTrains(DeltaTime);
-/*Update Traffic Lights*/
 
+	/*Update Traffic Lights*/
 	//check for collisions between traffic signs and trains and update
 	for (int i = 0; i < SignalsCounter; i++) {
 		if (!TrafficSignals[i]->GetGreenLight()) {
