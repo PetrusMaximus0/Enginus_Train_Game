@@ -72,8 +72,8 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>H:\Repos\SDL\SDL2_image\include;H:\Repos\SDL\SDL2\include;$(IncludePath)</IncludePath>
-    <LibraryPath>..\SDL\SDL2_image\lib\x64;..\SDL\SDL2\lib\x64;$(LibraryPath)</LibraryPath>
+    <IncludePath>..\Enginus-Dependencies\SDL2\include;..\Enginus-Dependencies\SDL2_image\include;$(IncludePath)</IncludePath>
+    <LibraryPath>H:\Repos\Enginus-Dependencies\SDL2_image\lib\x64;H:\Repos\Enginus-Dependencies\SDL2\lib\x64;..\Enginus-Dependencies\SDL2\lib\x64;..\Enginus-Dependencies\SDL2_image\lib\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
