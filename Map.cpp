@@ -88,8 +88,6 @@ void Map::DrawMap()
 				//std::cout << "ERROR, unknown texture selected" << std::endl;
 				break;
 			}
-			
-
 		}
 	}
 

@@ -38,9 +38,8 @@ int main(int argc, char* args[]) {
 		FrameTime = SDL_GetTicks() - FrameStart;
 		if (FrameDelay > FrameTime)
 			SDL_Delay(FrameDelay - FrameTime);
-		else
-			std::cout << "Game is slower than frame rate delay\n";
 	}
+
 	/*CLEAN UP*/
 	OGame->Clean();
 	delete OGame;

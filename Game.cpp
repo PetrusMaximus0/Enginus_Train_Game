@@ -422,8 +422,7 @@ bool Game::IsTrainInStation(RailwayPoint* Station) {
 bool Game::IsColliding(TransformComponent Object1Transform, TransformComponent Object2Transform)
 {
 	float Distance = (Object1Transform.GetPosition() - Object2Transform.GetPosition()).Abs();
-
-	return Distance < GAME_OBJECT_WIDTH+5 ? true : false;
+	return (Distance < GAME_OBJECT_WIDTH + 5);
 }
 //
 RailwaySignal* Game::NewSignal(Vector2D<float> Position, Vector2D<float> TargetPosition, bool GreenLight)
@@ -431,11 +430,10 @@ RailwaySignal* Game::NewSignal(Vector2D<float> Position, Vector2D<float> TargetP
 	SignalsCounter++;
 	Position = TileToPixelCoordinates(Position);
 	TargetPosition = TileToPixelCoordinates(TargetPosition);
-
-	return new RailwaySignal(Renderer, TransformComponent{ Position, Vector2D<float>{0,0}, 0.f }, TargetPosition, GreenLight);
+	TransformComponent Transform = TransformComponent{ Position, Vector2D<float>{0,0}, 0.f };
+	return new RailwaySignal(Renderer, Transform, TargetPosition, GreenLight);
 }
 void Game::DeleteSignal(RailwaySignal* Signal) {
 	SignalsCounter--;
 	delete(Signal);
-
 }
