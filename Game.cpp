@@ -17,13 +17,13 @@ Game::Game(const char* title, int PositionX, int PositionY, int Width, int Heigh
 	}
 
 	InitializeSDL(title, PositionX, PositionY, Width, Height, IsFullscreen);
-
 	nlohmann::json Data = LoadGameData();
+
 	InitializePoints(Data);
 	InitializeTrains(Data);
 	InitializeSignals(Data);
 
-	GameWorld = new Map(Renderer);
+	GameWorld = new TileMap(Renderer, GameMap);
 }
 Game::~Game() {
 	/*Default destructor for class Game*/
@@ -90,10 +90,9 @@ void Game::Render()
 	/*Clear old renderer stuff*/
 
 	SDL_RenderClear(Renderer);
-	GameWorld->LoadMap(GameMap);//Used to Change Maps
 
 	/*Render the Game Map*/
-	GameWorld->DrawMap();
+	GameWorld->Draw();
 	
 	/*Render the Stations and Waypoints*/
 	for (int i = 0; i < StationsCounter; i++) {

@@ -3,7 +3,7 @@
 #include <SDL_image.h>
 #include <iostream>
 #include <cstdlib>
-#include "Map.h"
+#include "TileMap.h"
 #include "Library.h"
 #include "Train.h"
 #include "RailwayPoint.h"
@@ -21,7 +21,7 @@ private:
 	int SignalsCounter{ 0 };
 	const int FramesPerSecond{};
 	TileTypes GameMap[GAME_WINDOW_HEIGHT / TILE_HEIGHT][GAME_WINDOW_WIDTH / TILE_WIDTH]{};
-	Map* GameWorld{};
+	TileMap* GameWorld{};
 	RailwayPoint* Stations[NUMBER_OF_STATIONS]{};
 	Train* Trains[MAX_NUMBER_OF_TRAINS]{};
 	RailwaySignal* TrafficSignals[MAX_NUMBER_OF_TRAFFIC_SIGNS]{};
