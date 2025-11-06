@@ -1,0 +1,215 @@
+{
+  "trains": [
+
+    {
+      "identifier": "CA",
+      "initialStationID": "01",
+      "isMoving": true,
+      "maxTrips": 5
+    },
+
+    {
+      "identifier": "CO",
+      "initialStationID": "00",
+      "isMoving": true,
+      "maxTrips": 5
+    },
+
+    {
+      "identifier": "KE",
+      "initialStationID": "02",
+      "isMoving": true,
+      "maxTrips": 5
+    },
+    {
+      "identifier": "KA",
+      "initialStationID": "05",
+      "isMoving": true,
+      "maxTrips": 5
+    },
+    {
+      "identifier": "AC",
+      "initialStationID": "01",
+      "isMoving": true,
+      "maxTrips": 5
+    },
+
+    {
+      "identifier": "AD",
+      "initialStationID": "00",
+      "isMoving": true,
+      "maxTrips": 5
+    },
+
+    {
+      "identifier": "AA",
+      "initialStationID": "02",
+      "isMoving": true,
+      "maxTrips": 5
+    },
+    {
+      "identifier": "AB",
+      "initialStationID": "05",
+      "isMoving": true,
+      "maxTrips": 5
+    },
+    {
+      "identifier": "AE",
+      "initialStationID": "01",
+      "isMoving": true,
+      "maxTrips": 5
+    },
+
+    {
+      "identifier": "AF",
+      "initialStationID": "00",
+      "isMoving": true,
+      "maxTrips": 5
+    },
+
+    {
+      "identifier": "AG",
+      "initialStationID": "02",
+      "isMoving": true,
+      "maxTrips": 5
+    },
+    {
+      "identifier": "AH",
+      "initialStationID": "05",
+      "isMoving": true,
+      "maxTrips": 5
+    },
+
+    {
+      "identifier": "AI",
+      "initialStationID": "01",
+      "isMoving": true,
+      "maxTrips": 5
+    },
+
+    {
+      "identifier": "AJ",
+      "initialStationID": "00",
+      "isMoving": true,
+      "maxTrips": 5
+    },
+
+    {
+      "identifier": "AK",
+      "initialStationID": "02",
+      "isMoving": true,
+      "maxTrips": 5
+    },
+    {
+      "identifier": "AL",
+      "initialStationID": "05",
+      "isMoving": true,
+      "maxTrips": 5
+    }
+
+
+  ],
+
+  "points": [
+    {
+      "identifier": "00",
+      "pointType": "WPT",
+      "routeA": "01",
+      "routeB": null,
+      "x": 4,
+      "y": 20
+    },
+    {
+      "identifier": "01",
+      "pointType": "STA",
+      "routeA": "02",
+      "routeB": null,
+      "x": 4,
+      "y": 12
+    },
+    {
+      "identifier": "02",
+      "pointType": "WPT",
+      "routeA": "03",
+      "routeB": "06",
+      "x": 21,
+      "y": 12
+    },
+    {
+      "identifier": "03",
+      "pointType": "STA",
+      "routeA": "04",
+      "routeB": "09",
+      "x": 39,
+      "y": 12
+    },
+    {
+      "identifier": "04",
+      "pointType": "WPT",
+      "routeA": "05",
+      "routeB": null,
+      "x": 39,
+      "y": 20
+    },
+    {
+      "identifier": "05",
+      "pointType": "STA",
+      "routeA": "00",
+      "routeB": null,
+      "x": 21,
+      "y": 20
+    },
+    {
+      "identifier": "06",
+      "pointType": "WPT",
+      "routeA": "07",
+      "routeB": null,
+      "x": 21,
+      "y": 4
+    },
+    {
+      "identifier": "07",
+      "pointType": "STA",
+      "routeA": "08",
+      "routeB": null,
+      "x": 10,
+      "y": 4
+    },
+    {
+      "identifier": "08",
+      "pointType": "WPT",
+      "routeA": null,
+      "routeB": null,
+      "x": 10,
+      "y": 22
+    },
+    {
+      "identifier": "09",
+      "pointType": "WPT",
+      "routeA": null,
+      "routeB": null,
+      "x": 39,
+      "y": 4
+    }
+
+  ],
+
+  "signals": [
+    {
+      "targetX": 19,
+      "targetY": 12,
+      "positionX": 19,
+      "positionY": 11,
+      "greenLight": false
+    },
+    {
+      "targetX": 21,
+      "targetY": 14,
+      "positionX": 20,
+      "positionY": 14,
+      "greenLight": true
+
+    }
+  ]
+}
+
